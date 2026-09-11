@@ -41,7 +41,7 @@
       <h3 data-pl="Rozrzut" data-en="The scatter"></h3>
       <h2 data-pl="Masa, prędkość, zasięg — naraz" data-en="Mass, speed and reach at once"></h2>
       <p class="prose" style="color:var(--muted);max-width:34rem"
-         data-pl="Położenie znacznika to masa i prędkość, jego wielkość to zasięg. Kolor oznacza domenę. Kliknięcie przypina podpis, żeby dało się porównać dwa modele obok siebie."
+         data-pl="Położenie znacznika to masa i prędkość, jego wielkość to zasięg. Kolor oznacza środowisko. Kliknięcie przypina podpis, żeby dało się porównać dwa modele obok siebie."
          data-en="A mark’s position is its mass and speed, its size is its range. Colour marks the domain. A click pins the label so two models can be compared side by side."></p>
 
       <div class="controls" id="controls"></div>
@@ -100,7 +100,7 @@ function controls() {
   const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
   const host = document.getElementById('controls');
   host.innerHTML =
-    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Środowisko'}</span>` +
     doms.map(([id, l]) =>
       `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
          ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(l)}
@@ -208,7 +208,7 @@ function table() {
     caption: { pl: 'Masa, prędkość i zasięg — pełne dane planszy', en: 'Mass, speed and range — the full data of this plate' },
     cols: () => ([
       { label: 'Model' },
-      { label: lang === 'en' ? 'Domain' : 'Domena' },
+      { label: lang === 'en' ? 'Domain' : 'Środowisko' },
       { label: lang === 'en' ? 'Mass' : 'Masa', num: true },
       { label: lang === 'en' ? 'Max speed' : 'Prędkość maks.', num: true },
       { label: lang === 'en' ? 'Range' : 'Zasięg', num: true },

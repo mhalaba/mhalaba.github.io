@@ -9,7 +9,7 @@ export const PLATES = [
   { n: '02', slug: 'zasieg',         pl: 'Drabina zasięgu',      en: 'The ladder of reach' },
   { n: '03', slug: 'masa-predkosc',  pl: 'Morfologia',           en: 'Morphology' },
   { n: '04', slug: 'klasy',          pl: 'Szesnaście klas',      en: 'Sixteen classes' },
-  { n: '05', slug: 'teatry',         pl: 'Teatry i proliferacja', en: 'Theatres and proliferation' },
+  { n: '05', slug: 'teatry',         pl: 'Teatry i rozprzestrzenianie', en: 'Theatres and proliferation' },
 ];
 
 /* paleta — wartości identyczne z style.css i PALETA.md */

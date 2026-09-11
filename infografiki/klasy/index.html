@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Szesnaście klas — Atlas Dronów 2026</title>
-<meta name="description" content="Taksonomia bezzałogowców w szesnastu klasach: od FPV kamikaze po stealth UCAV, z kopertą zasięgu każdej klasy.">
+<meta name="description" content="Taksonomia bezzałogowców w szesnastu klasach: od FPV kamikaze po bezzałogowce trudnowykrywalne, z widełkami zasięgu każdej klasy.">
 <meta name="theme-color" content="#0e1412">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
@@ -58,7 +58,7 @@
         Szesnaście sposobów, <em>żeby to zrobić</em>
       </h1>
       <p class="standfirst"
-         data-pl="Katalog dzieli bezzałogowce na szesnaście klas. Każda ma własną kopertę zasięgu — i to ona, bardziej niż wygląd czy nazwa producenta, decyduje o tym, do czego dana maszyna się nadaje."
+         data-pl="Katalog dzieli bezzałogowce na szesnaście klas. Każda ma własną widełki zasięgu — i to ona, bardziej niż wygląd czy nazwa producenta, decyduje o tym, do czego dana maszyna się nadaje."
          data-en="The catalogue sorts uncrewed systems into sixteen classes. Each has its own envelope of reach — and that envelope, more than any silhouette or maker’s name, decides what the machine is good for."></p>
       <div class="hero-figs" id="figs"></div>
     </div>
@@ -67,7 +67,7 @@
   <section class="section">
     <div class="wrap">
       <h3 data-pl="Klasy" data-en="The classes"></h3>
-      <h2 data-pl="Koperta zasięgu każdej klasy" data-en="The reach envelope of each class"></h2>
+      <h2 data-pl="Widełki zasięgu każdej klasy" data-en="The reach envelope of each class"></h2>
       <p class="prose" style="color:var(--muted);max-width:34rem"
          data-pl="Pasek pod nazwą pokazuje, gdzie na wspólnej skali logarytmicznej leży zasięg modeli danej klasy. Kliknięcie karty rozwija listę jej przedstawicieli."
          data-en="The bar under each name shows where that class’s models sit on one shared logarithmic scale. Clicking a card opens the list of its members."></p>
@@ -85,11 +85,11 @@
   <section class="section">
     <div class="wrap">
       <p class="note"
-         data-pl-html="<b>Jak czytać.</b> Koperta liczona jest z modeli w katalogu, nie z deklaracji producentów — dlatego bywa węższa niż widełki, które atlas podaje słownie dla całej klasy. Oba zapisy są na karcie: pasek to nasze dane, wiersz pod nim to opis klasy z atlasu."
+         data-pl-html="<b>Jak czytać.</b> Widełki liczone są z modeli w katalogu, nie z deklaracji producentów — dlatego bywa węższa niż widełki, które atlas podaje słownie dla całej klasy. Oba zapisy są na karcie: pasek to nasze dane, wiersz pod nim to opis klasy z atlasu."
          data-en-html="<b>How to read this.</b> The envelope is computed from the models in the catalogue, not from manufacturers’ claims — which is why it is sometimes narrower than the bracket the atlas states in words for the class as a whole. Both are on the card: the bar is our data, the line beneath it is the atlas’s own description of the class."></p>
       <div class="pager">
         <a href="../masa-predkosc/" data-pl="← Plansza 03 · Morfologia" data-en="← Plate 03 · Morphology"></a>
-        <a href="../teatry/" data-pl="Plansza 05 · Teatry i proliferacja →" data-en="Plate 05 · Theatres and proliferation →"></a>
+        <a href="../teatry/" data-pl="Plansza 05 · Teatry i rozprzestrzenianie →" data-en="Plate 05 · Theatres and proliferation →"></a>
       </div>
     </div>
   </section>
@@ -104,7 +104,7 @@ import { boot, lang, T, PAL, DOMAIN_COLOR, LEN, len, lenSpan, imperial,
 let DATA = null;
 const state = { domain: 'all', open: new Set() };
 
-/* wspólna skala dla wszystkich kopert — inaczej paski nie dałyby się porównać */
+/* wspólna skala dla wszystkich widełek — inaczej paski nie dałyby się porównać */
 const SCALE_LO = 4, SCALE_HI = 8000;
 
 function classes() {
@@ -139,7 +139,7 @@ function controls() {
   const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
   const host = document.getElementById('controls');
   host.innerHTML =
-    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Środowisko'}</span>` +
     doms.map(([id, l]) =>
       `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
          ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(l)}
@@ -148,7 +148,7 @@ function controls() {
     b.addEventListener('click', () => { state.domain = b.dataset.d; draw(); }));
 }
 
-/* pasek koperty — miniatura na tej samej skali co oś pod siatką */
+/* pasek widełek — miniatura na tej samej skali co oś pod siatką */
 function envelope(c, w = 236, h = 12) {
   const s = logScale(SCALE_LO, SCALE_HI, 0, w);
   const col = DOMAIN_COLOR[c.domain];
@@ -220,12 +220,12 @@ let made = false;
 function table() {
   if (made) return; made = true;
   dataTable(document.getElementById('tablehost'), {
-    caption: { pl: 'Klasy i ich koperty zasięgu', en: 'Classes and their reach envelopes' },
+    caption: { pl: 'Klasy i ich widełek zasięgu', en: 'Classes and their reach envelopes' },
     cols: () => ([
       { label: lang === 'en' ? 'Class' : 'Klasa' },
-      { label: lang === 'en' ? 'Domain' : 'Domena' },
+      { label: lang === 'en' ? 'Domain' : 'Środowisko' },
       { label: lang === 'en' ? 'Models' : 'Modeli', num: true },
-      { label: lang === 'en' ? 'Envelope, from the catalogue' : 'Koperta z katalogu', num: true },
+      { label: lang === 'en' ? 'Envelope, from the catalogue' : 'Widełki z katalogu', num: true },
       { label: lang === 'en' ? 'Atlas description' : 'Opis w atlasie' },
     ]),
     rows: () => classes().map(c => [

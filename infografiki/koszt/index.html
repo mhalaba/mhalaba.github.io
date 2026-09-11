@@ -58,7 +58,7 @@
   <section class="section">
     <div class="wrap">
       <p class="note"
-         data-pl-html="<b>Jak czytać.</b> Ceny pochodzą z pól tekstowych atlasu i oznaczają różne rzeczy: koszt wytworzenia, cenę katalogową albo budżet zakupowy. Trzy pozycje dotyczą całego kompleksu, nie pojedynczego egzemplarza — są domyślnie ukryte i wyraźnie oznaczone po włączeniu. Przeliczenia z EUR i UAH po kursie zapisanym w data.json."
+         data-pl-html="<b>Jak czytać.</b> Ceny pochodzą z pól tekstowych atlasu i oznaczają różne rzeczy: koszt wytworzenia, cenę katalogową albo budżet zakupowy. Trzy pozycje dotyczą całego zestawu, nie pojedynczego egzemplarza — są domyślnie ukryte i wyraźnie oznaczone po włączeniu. Przeliczenia z EUR i UAH po kursie zapisanym w data.json."
          data-en-html="<b>How to read this.</b> Prices come from the atlas text fields and mean different things: manufacturing cost, list price, or procurement budget. Three entries cover a whole system rather than a single airframe — they are hidden by default and clearly marked once shown. Conversions from EUR and UAH use the rate recorded in data.json."></p>
       <div class="pager">
         <a href="../" data-pl="← Wszystkie plansze" data-en="← All plates"></a>
@@ -106,7 +106,7 @@ function controls() {
     `<span class="controls__label">${lang === 'en' ? 'View' : 'Widok'}</span>
      <label class="switch">
        <input type="checkbox" id="sys" ${state.showSystem ? 'checked' : ''}>
-       <span>${lang === 'en' ? 'include whole-system prices' : 'pokaż ceny całych kompleksów'}</span>
+       <span>${lang === 'en' ? 'include whole-system prices' : 'pokaż ceny całych zestawów'}</span>
      </label>`;
   host.querySelector('#sys').addEventListener('change', e => {
     state.showSystem = e.target.checked;
@@ -174,7 +174,7 @@ function chart() {
 
     if (d.cost.system) {
       el('text', { x: padL - 12, y: y + 15, 'text-anchor': 'end', class: 'tick-label',
-        text: lang === 'en' ? 'whole system' : 'cały kompleks' }, rg);
+        text: lang === 'en' ? 'whole system' : 'cały zestaw' }, rg);
     }
 
     /* powierzchnia trafienia szersza niż znacznik */
@@ -210,7 +210,7 @@ function duels() {
     const A = by(a), B = by(b);
     if (!A?.cost || !B?.cost) return '';
     const r = Math.round(((B.cost.lo + B.cost.hi) / 2) / ((A.cost.lo + A.cost.hi) / 2));
-    const sys = A.cost.system ? (lang === 'en' ? ' (whole system)' : ' (cały kompleks)') : '';
+    const sys = A.cost.system ? (lang === 'en' ? ' (whole system)' : ' (cały zestaw)') : '';
     return `<div class="plate-card" style="min-height:auto">
       <span class="plate-card__no">${lang === 'en' ? 'ratio' : 'stosunek'} 1 : ${nf(r)}</span>
       <p class="plate-card__t">${T(A.name)}</p>

@@ -22,7 +22,7 @@ Przejęte bez zmian z systemu atlasu (`assets/styles-*.css`).
 
 ## Paleta kategoryczna — 3 sloty
 
-Używana wyłącznie tam, gdzie kolor niesie tożsamość: domena bezzałogowca.
+Używana wyłącznie tam, gdzie kolor niesie tożsamość: środowisko bezzałogowca.
 
 | Slot | Wartość | Znaczenie |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ od samego koloru — ani dla osoby z daltonizmem, ani przy wydruku.
 
 ## Zasady, które z tego wynikają
 
-- Kolor kategoryczny przypisany jest do bytu (domeny), nie do jego pozycji w rankingu;
+- Kolor kategoryczny przypisany jest do bytu (środowiska), nie do jego pozycji w rankingu;
   filtrowanie listy nie przemalowuje tego, co zostało.
 - Wykres jednej wielkości (koszt, zasięg) używa jednej barwy — legenda jest wtedy
   zbędna, bo tytuł nazywa serię.

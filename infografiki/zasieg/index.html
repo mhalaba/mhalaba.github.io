@@ -63,7 +63,7 @@
         <aside class="fan-side">
           <h4 data-pl="Pierścienie" data-en="Rings"></h4>
           <dl id="rings"></dl>
-          <h4 data-pl="Domena" data-en="Domain"></h4>
+          <h4 data-pl="Środowisko" data-en="Domain"></h4>
           <div class="legend" id="legend" style="flex-direction:column;gap:.5rem"></div>
         </aside>
       </div>
@@ -127,7 +127,7 @@ function controls() {
   const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
   const host = document.getElementById('controls');
   host.innerHTML =
-    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Środowisko'}</span>` +
     doms.map(([id, label]) =>
       `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
          ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(label)}
