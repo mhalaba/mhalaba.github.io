@@ -1,0 +1,377 @@
+/* Atlas Dronów 2026 — plansze infograficzne
+   Tokeny przejęte z assets/styles-*.css (ink/brass/sage/paper).
+   Paleta danych: patrz PALETA.md (zwalidowana skryptem, nie dobierana na oko). */
+
+:root {
+  /* — powierzchnie i tekst: tokeny atlasu — */
+  --ink:        #0e1412;
+  --ink-2:      #151c19;
+  --ink-3:      #1c2621;
+  --paper:      #f1e6d0;
+  --paper-2:    #e4d5b5;
+  --brass:      #c4a35a;
+  --brass-dim:  #8a7340;
+  --sage:       #9bb5a4;
+  --fg:         #e8e4d8;
+  --muted:      #9aa396;
+  --line:       #2a332e;
+
+  /* — paleta kategoryczna, 3 sloty (domena) — zwalidowana --pairs all --mode dark — */
+  --cat-1: #ad8a2a;   /* powietrze */
+  --cat-2: #5d92d8;   /* morze     */
+  --cat-3: #c4698f;   /* ląd       */
+
+  /* — rampa sekwencyjna (mosiądz), 5 stopni, ciemny→jasny — */
+  --seq-1: #655221;
+  --seq-2: #82692a;
+  --seq-3: #9f8134;
+  --seq-4: #bd9b40;
+  --seq-5: #dbb64d;
+
+  --font-sans:  "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "IBM Plex Serif", ui-serif, Georgia, serif;
+  --font-mono:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --measure: 34rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; }
+
+/* ───────────────────────── nagłówek ───────────────────────── */
+
+.site-head {
+  position: sticky; top: 0; z-index: 40;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  background: color-mix(in srgb, var(--ink) 90%, transparent);
+  backdrop-filter: blur(12px);
+}
+.site-head__in {
+  margin: 0 auto; max-width: 72rem;
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: .75rem; padding: .75rem var(--gutter);
+}
+.brandmark { display: flex; align-items: baseline; gap: .75rem; min-width: 0; text-decoration: none; }
+.brandmark__kicker {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--brass); white-space: nowrap;
+}
+.brandmark__title {
+  font-family: var(--font-serif); font-size: 1.05rem; font-weight: 600;
+  color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.site-nav { display: flex; align-items: center; gap: .25rem; }
+.site-nav a {
+  padding: .5rem .65rem; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  text-decoration: none; transition: color .15s;
+}
+.site-nav a:hover, .site-nav a:focus-visible { color: var(--paper); }
+.site-nav a[aria-current="page"] { color: var(--brass); }
+
+.lang-toggle {
+  display: inline-flex; border: 1px solid var(--line); margin-left: .35rem;
+}
+.lang-toggle button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: .4rem .55rem; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+.lang-toggle button[aria-pressed="true"] { background: var(--brass); color: var(--ink); }
+
+/* ───────────────────────── układ ───────────────────────── */
+
+.wrap { margin: 0 auto; max-width: 72rem; padding: 0 var(--gutter); }
+.wrap--text { max-width: calc(var(--measure) + 2 * var(--gutter)); }
+
+.plate-head {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  padding: clamp(2.5rem, 7vw, 5rem) 0 clamp(1.75rem, 4vw, 2.75rem);
+  overflow: hidden;
+}
+/* siatka kartograficzna — ten sam motyw co hero atlasu */
+.plate-head::before {
+  content: ""; position: absolute; inset: 0; opacity: .4; pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(196,163,90,.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(196,163,90,.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.plate-head > * { position: relative; }
+
+.plate-no {
+  display: inline-block;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--brass);
+  border-left: 2px solid var(--brass); padding-left: .6rem; margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(2rem, 6.5vw, 3.75rem); line-height: 1.05;
+  letter-spacing: -.01em; margin: 0 0 .75rem; color: var(--paper);
+  max-width: 22ch;
+}
+h1 em { font-style: italic; color: var(--brass); }
+
+.standfirst {
+  font-family: var(--font-serif); font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  line-height: 1.5; color: var(--fg); max-width: 46ch; margin: 0;
+}
+
+h2 {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 1.9rem); line-height: 1.2;
+  color: var(--paper); margin: 0 0 .5rem; letter-spacing: -.005em;
+}
+h3 {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--brass); margin: 0 0 .75rem; font-weight: 500;
+}
+
+p { margin: 0 0 1rem; }
+.prose { max-width: var(--measure); }
+.prose p { color: var(--fg); }
+
+.section { padding: clamp(2.5rem, 6vw, 4.5rem) 0; border-bottom: 1px solid var(--line); }
+
+/* ───────────────────────── liczba wiodąca ───────────────────────── */
+
+.hero-figs {
+  display: grid; gap: 1px; background: var(--line);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  border: 1px solid var(--line); margin: 2rem 0 0;
+}
+.fig { background: var(--ink-2); padding: 1.25rem 1.25rem 1.1rem; }
+.fig__n {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1;
+  color: var(--brass); font-variant-numeric: tabular-nums; display: block;
+}
+.fig__n small { font-size: .45em; color: var(--muted); font-weight: 400; margin-left: .2em; }
+.fig__l {
+  display: block; margin-top: .5rem; font-family: var(--font-mono);
+  font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ───────────────────────── sterowanie ───────────────────────── */
+
+.controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+  padding: .9rem 0 1.35rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem;
+}
+.controls__label {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted); margin-right: .35rem;
+}
+.chip {
+  appearance: none; cursor: pointer;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--line); padding: .42rem .7rem;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; transition: all .15s; min-height: 32px;
+}
+.chip:hover { color: var(--paper); border-color: var(--brass-dim); }
+.chip[aria-pressed="true"] {
+  background: var(--brass); border-color: var(--brass); color: var(--ink);
+}
+.chip__dot {
+  display: inline-block; width: .55em; height: .55em; margin-right: .45em;
+  vertical-align: baseline; border-radius: 50%;
+}
+
+.switch {
+  display: inline-flex; align-items: center; gap: .5rem; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); user-select: none;
+}
+.switch input { accent-color: var(--brass); width: 15px; height: 15px; cursor: pointer; }
+
+/* ───────────────────────── wykresy ───────────────────────── */
+
+.chart-frame { position: relative; }
+.chart-scroll { overflow-x: auto; overflow-y: hidden; }
+svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
+
+.axis line, .axis path { stroke: var(--line); }
+.grid line { stroke: var(--line); stroke-dasharray: 2 4; }
+.axis text, .tick-label {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  fill: var(--muted); text-transform: uppercase;
+}
+.axis-title {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
+  fill: var(--brass); text-transform: uppercase;
+}
+.row-label { font-family: var(--font-sans); font-size: 12.5px; fill: var(--fg); }
+.row-label--dim { fill: var(--muted); }
+.val-label {
+  font-family: var(--font-mono); font-size: 11px; fill: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar { transition: opacity .12s; }
+.row-hit { fill: transparent; cursor: pointer; }
+.row-hit:hover + .row-g .bar, .row-g.is-hot .bar { opacity: 1; }
+.is-dimmed { opacity: .22; }
+
+.dot { stroke: var(--ink); stroke-width: 2; }
+.ref-line { stroke: var(--brass-dim); stroke-dasharray: 3 3; stroke-width: 1; }
+.ref-text {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .14em;
+  fill: var(--brass-dim); text-transform: uppercase;
+}
+
+/* legenda */
+.legend { display: flex; flex-wrap: wrap; gap: 1rem; padding: .25rem 0 1rem; }
+.legend__i {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.legend__sw { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+.legend__sw--sq { border-radius: 2px; }
+
+/* podpowiedź */
+.tip {
+  position: fixed; z-index: 60; pointer-events: none; opacity: 0;
+  transition: opacity .1s; max-width: 20rem;
+  background: var(--ink-3); border: 1px solid var(--brass-dim);
+  padding: .7rem .8rem; box-shadow: 0 8px 28px rgba(0,0,0,.55);
+}
+.tip[data-show="1"] { opacity: 1; }
+.tip__t {
+  font-family: var(--font-serif); font-weight: 600; font-size: .95rem;
+  color: var(--paper); margin: 0 0 .15rem; line-height: 1.25;
+}
+.tip__s {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--brass); margin: 0 0 .5rem;
+}
+.tip__row {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+.tip__row b { color: var(--fg); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tip__raw {
+  margin: .5rem 0 0; padding-top: .5rem; border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); line-height: 1.45;
+}
+
+/* ───────────────────────── tabela danych ───────────────────────── */
+
+.table-toggle {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: .5rem 0; margin-top: 1.25rem;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--brass); border-bottom: 1px solid var(--brass-dim);
+}
+.data-table { overflow-x: auto; margin-top: 1rem; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+caption {
+  text-align: left; padding-bottom: .6rem;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+th, td { padding: .45rem .7rem; border-bottom: 1px solid var(--line); text-align: left; }
+th {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--brass); font-weight: 500; white-space: nowrap;
+}
+td { color: var(--fg); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+td.dim { color: var(--muted); }
+
+/* ───────────────────────── karty / hub ───────────────────────── */
+
+.plate-grid {
+  display: grid; gap: 1px; background: var(--line);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  border: 1px solid var(--line);
+}
+.plate-card {
+  background: var(--ink-2); padding: 1.5rem; text-decoration: none;
+  display: flex; flex-direction: column; gap: .6rem; transition: background .15s;
+  min-height: 15rem;
+}
+.plate-card:hover { background: var(--ink-3); }
+.plate-card__no {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .26em;
+  text-transform: uppercase; color: var(--brass);
+}
+.plate-card__t {
+  font-family: var(--font-serif); font-size: 1.3rem; font-weight: 600;
+  color: var(--paper); line-height: 1.2; margin: 0;
+}
+.plate-card__d { font-size: 13.5px; color: var(--muted); margin: 0; line-height: 1.55; }
+.plate-card__go {
+  margin-top: auto; font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--brass);
+}
+.plate-card__spark { margin-top: auto; }
+
+/* ───────────────────────── stopka / noty ───────────────────────── */
+
+.note {
+  border-left: 2px solid var(--brass-dim); padding: .1rem 0 .1rem 1rem;
+  color: var(--muted); font-size: 13.5px; line-height: 1.6; max-width: var(--measure);
+}
+.note b { color: var(--fg); font-weight: 500; }
+
+.site-foot { border-top: 1px solid var(--line); margin-top: 0; }
+.site-foot__in {
+  margin: 0 auto; max-width: 72rem; padding: 2rem var(--gutter) 3rem;
+  font-family: var(--font-mono); font-size: 11px; line-height: 1.7; color: var(--muted);
+}
+.site-foot a { color: var(--brass); }
+
+.pager { display: flex; justify-content: space-between; gap: 1rem; padding: 2rem 0 0; flex-wrap: wrap; }
+.pager a {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--brass); text-decoration: none;
+}
+.pager a:hover { color: var(--paper); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--brass); outline-offset: 2px;
+}
+
+[data-lang-pl], [data-lang-en] { display: none; }
+html[lang="pl"] [data-lang-pl] { display: revert; }
+html[lang="en"] [data-lang-en] { display: revert; }
+
+@media (max-width: 640px) {
+  .site-nav a { padding: .5rem .4rem; font-size: 10px; letter-spacing: .1em; }
+  .brandmark__kicker { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+@media print {
+  .site-head, .controls, .table-toggle, .pager { display: none; }
+  body { background: #fff; color: #000; }
+}

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teatry i proliferacja — Atlas Dronów 2026</title>
+<meta name="description" content="Kto buduje i gdzie to lata: macierz ośmiu krajów pochodzenia wobec sześciu teatrów, na podstawie 54 modeli katalogu.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .cell { cursor: pointer; }
+  .cell-v {
+    font-family: var(--font-mono); font-size: 11.5px; font-variant-numeric: tabular-nums;
+    pointer-events: none; text-anchor: middle;
+  }
+  .col-h {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em;
+    fill: var(--brass); text-transform: uppercase;
+  }
+  .row-h { font-family: var(--font-sans); font-size: 13px; fill: var(--fg); }
+  .row-t { font-family: var(--font-mono); font-size: 10.5px; fill: var(--muted); }
+  .theatre-list { margin-top: 2.5rem; display: grid; gap: 1px; background: var(--line);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); border: 1px solid var(--line); }
+  .theatre { background: var(--ink-2); padding: 1.15rem 1.25rem; }
+  .theatre h4 { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 600;
+    color: var(--paper); margin: 0 0 .1rem; }
+  .theatre .n { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--brass); }
+  .theatre p { font-size: 13px; color: var(--muted); margin: .5rem 0 0; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Plansza 05" data-en="Plate 05">Plansza 05</span>
+      <h1 data-pl-html="Kto buduje, <em>gdzie to lata</em>"
+          data-en-html="Who builds it, <em>where it flies</em>">
+        Kto buduje, <em>gdzie to lata</em>
+      </h1>
+      <p class="standfirst"
+         data-pl="Osiem krajów pochodzenia, sześć teatrów. Ta sama konstrukcja pojawia się zwykle w kilku naraz — i właśnie to rozejście się projektu od miejsca jego powstania jest w tym katalogu najbardziej uderzające."
+         data-en="Eight countries of origin, six theatres. The same design usually turns up in several at once — and it is precisely this drift of a design away from the place that made it which is the most striking thing in the catalogue."></p>
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Macierz" data-en="The matrix"></h3>
+      <h2 data-pl="Pochodzenie wobec teatru" data-en="Origin against theatre"></h2>
+      <p class="prose" style="color:var(--muted);max-width:34rem"
+         data-pl="Liczba w komórce to modele danego kraju obecne na danym teatrze. Im jaśniejsze pole, tym większa liczba. Najedź na komórkę, żeby zobaczyć, o które modele chodzi."
+         data-en="The number in a cell is the count of that country’s models present in that theatre. The lighter the field, the higher the count. Hover a cell to see which models they are."></p>
+
+      <div class="legend" id="legend"></div>
+      <div class="chart-frame chart-scroll"><svg class="chart" id="chart" role="img"></svg></div>
+      <div id="tablehost"></div>
+
+      <div class="theatre-list" id="theatres"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jak czytać.</b> Kraj brany jest z pierwszego członu pola „pochodzenie”, więc licencyjne kopie liczą się do konstruktora, nie do producenta. Trzy modele mają pochodzenie podwójne (ukraińsko-rosyjskie, irańsko-rosyjskie) i liczą się w obu wierszach — dlatego suma wierszy jest większa niż 54. Obecność na teatrze bierze się z pola „teatry” w katalogu i oznacza udokumentowane użycie, nie eksport."
+         data-en-html="<b>How to read this.</b> The country is taken from the first part of the “origin” field, so licence-built copies count towards the designer, not the manufacturer. Three models have a dual origin (Ukrainian-Russian, Iranian-Russian) and count in both rows — which is why the rows sum to more than 54. Presence in a theatre comes from the catalogue’s “theatres” field and denotes documented use, not export."></p>
+      <div class="pager">
+        <a href="../klasy/" data-pl="← Plansza 04 · Szesnaście klas" data-en="← Plate 04 · Sixteen classes"></a>
+        <a href="../" data-pl="Wszystkie plansze →" data-en="All plates →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, lang, T, PAL, el, clear, Tip, tipHTML, dataTable, nf } from '../atlas.js';
+
+let DATA = null;
+
+/* Kraj z pola „pochodzenie”: ucinamy nawias i dopiski, rozbijamy podwójne. */
+function countries(d) {
+  const raw = (lang === 'en' ? d.origin.en : d.origin.pl);
+  const head = raw.split(/[(—,;]/)[0].trim();
+  return head.split(/\s+(?:i|and|\/)\s+/).map(s => s.trim()).filter(Boolean);
+}
+/* Klucz niezależny od języka, żeby wiersze nie przeskakiwały przy zmianie PL/EN. */
+function keys(d) {
+  return d.origin.pl.split(/[(—,;]/)[0].trim().split(/\s+(?:i|\/)\s+/).map(s => s.trim()).filter(Boolean);
+}
+
+function matrix() {
+  const rows = new Map();                        /* klucz -> {label, byTheatre, total} */
+  for (const d of DATA.drones) {
+    const ks = keys(d), labels = countries(d);
+    ks.forEach((k, i) => {
+      if (!rows.has(k)) rows.set(k, { label: labels[i] ?? k, byTheatre: {}, total: 0, drones: {} });
+      const r = rows.get(k);
+      r.label = labels[i] ?? k;
+      r.total++;
+      for (const t of d.theaters || []) {
+        r.byTheatre[t] = (r.byTheatre[t] || 0) + 1;
+        (r.drones[t] ||= []).push(d);
+      }
+    });
+  }
+  return [...rows.entries()]
+    .map(([k, v]) => ({ k, ...v }))
+    .sort((a, b) => b.total - a.total);
+}
+
+function figures() {
+  const m = matrix();
+  const top = m[0];
+  const byTheatre = {};
+  for (const d of DATA.drones) for (const t of d.theaters || []) byTheatre[t] = (byTheatre[t] || 0) + 1;
+  const busiest = Object.entries(byTheatre).sort((a, b) => b[1] - a[1])[0];
+  const multi = DATA.drones.filter(d => (d.theaters || []).length >= 3).length;
+  document.getElementById('figs').innerHTML = [
+    [String(m.length), lang === 'en' ? 'countries of origin' : 'krajów pochodzenia'],
+    [String(top.total), (lang === 'en' ? 'models from ' : 'modeli z kraju: ') + top.label],
+    [String(busiest[1]), (lang === 'en' ? 'models in ' : 'modeli na teatrze: ') + T(DATA.theaters.find(t => t.id === busiest[0])?.name)],
+    [String(multi), lang === 'en' ? 'models present in three theatres or more' : 'modeli obecnych na trzech teatrach lub więcej'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+/* rampa sekwencyjna — pięć progów; zero zostaje puste */
+const BINS = [1, 2, 4, 8, 16];
+const rampColor = v => {
+  if (!v) return null;
+  let i = 0;
+  while (i < BINS.length - 1 && v >= BINS[i + 1]) i++;
+  return PAL.seq[i];
+};
+
+function legend() {
+  document.getElementById('legend').innerHTML =
+    `<span class="legend__i">${lang === 'en' ? 'models per cell' : 'modeli w komórce'}</span>` +
+    PAL.seq.map((c, i) => {
+      const from = BINS[i], to = BINS[i + 1];
+      const label = to ? `${from}–${to - 1}` : `${from}+`;
+      return `<span class="legend__i"><span class="legend__sw legend__sw--sq" style="background:${c}"></span>${label}</span>`;
+    }).join('') +
+    `<span class="legend__i"><span class="legend__sw legend__sw--sq" style="background:transparent;border:1px solid ${PAL.line}"></span>0</span>`;
+}
+
+function chart() {
+  const rows = matrix();
+  const ths = DATA.theaters;
+  const svg = document.getElementById('chart');
+  clear(svg);
+
+  const narrow = innerWidth < 760;
+  const padL = narrow ? 108 : 168, padT = 78, padR = 16, padB = 12;
+  const cw = narrow ? 62 : 96, ch = 34, gap = 2;
+  const W = padL + ths.length * cw + padR;
+  const H = padT + rows.length * ch + padB;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('height', H);
+  svg.setAttribute('aria-label', lang === 'en'
+    ? 'Matrix of country of origin against theatre of use'
+    : 'Macierz kraju pochodzenia wobec teatru użycia');
+
+  /* nagłówki kolumn — pochylone, żeby zmieściły się nazwy teatrów */
+  ths.forEach((t, j) => {
+    const x = padL + j * cw + cw / 2;
+    el('text', {
+      x, y: padT - 12, class: 'col-h', 'text-anchor': 'start',
+      transform: `rotate(-38 ${x} ${padT - 12})`,
+      text: T(t.name),
+    }, svg);
+  });
+
+  rows.forEach((r, i) => {
+    const y = padT + i * ch;
+    el('text', { x: padL - 12, y: y + ch / 2 + 4, 'text-anchor': 'end', class: 'row-h', text: r.label }, svg);
+    el('text', { x: padL - 12, y: y + ch / 2 + 17, 'text-anchor': 'end', class: 'row-t', text: String(r.total) }, svg);
+
+    ths.forEach((t, j) => {
+      const v = r.byTheatre[t.id] || 0;
+      const x = padL + j * cw;
+      const c = rampColor(v);
+      const g = el('g', { class: 'cell' }, svg);
+      el('rect', {
+        x: x + gap / 2, y: y + gap / 2, width: cw - gap, height: ch - gap,
+        fill: c ?? 'transparent', stroke: c ? PAL.ink : PAL.line, 'stroke-width': c ? 2 : 1,
+      }, g);
+      /* etykieta liczbowa w każdej komórce — wartość nigdy nie zależy od samego koloru */
+      el('text', {
+        x: x + cw / 2, y: y + ch / 2 + 4, class: 'cell-v',
+        fill: v >= 8 ? PAL.ink : (v ? PAL.paper : PAL.line),
+        text: String(v),
+      }, g);
+
+      if (v) {
+        const names = (r.drones[t.id] || []).map(d => T(d.name));
+        const show = ev => Tip.show(tipHTML({
+          title: `${r.label} → ${T(t.name)}`,
+          sub: `${v} ${lang === 'en' ? (v === 1 ? 'model' : 'models') : (v === 1 ? 'model' : 'modeli')}`,
+          rows: [],
+          raw: names.join(' · '),
+        }), ev);
+        g.addEventListener('mouseenter', show);
+        g.addEventListener('mousemove', ev => Tip.move(ev));
+        g.addEventListener('mouseleave', () => Tip.hide());
+      }
+    });
+  });
+}
+
+function theatres() {
+  const byTheatre = {};
+  for (const d of DATA.drones) for (const t of d.theaters || []) byTheatre[t] = (byTheatre[t] || 0) + 1;
+  document.getElementById('theatres').innerHTML = DATA.theaters.map(t =>
+    `<div class="theatre">
+       <span class="n">${byTheatre[t.id] || 0} ${lang === 'en' ? 'models' : 'modeli'}</span>
+       <h4>${T(t.name)}</h4>
+       <p>${T(t.blurb)}</p>
+     </div>`).join('');
+}
+
+let made = false;
+function table() {
+  if (made) return; made = true;
+  dataTable(document.getElementById('tablehost'), {
+    caption: { pl: 'Pochodzenie wobec teatru — liczby z macierzy', en: 'Origin against theatre — the matrix counts' },
+    cols: () => ([
+      { label: lang === 'en' ? 'Origin' : 'Pochodzenie' },
+      ...DATA.theaters.map(t => ({ label: T(t.name), num: true })),
+      { label: lang === 'en' ? 'Total' : 'Razem', num: true },
+    ]),
+    rows: () => matrix().map(r => [
+      r.label, ...DATA.theaters.map(t => String(r.byTheatre[t.id] || 0)), String(r.total),
+    ]),
+  });
+}
+
+function draw() { figures(); legend(); chart(); theatres(); table(); }
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>

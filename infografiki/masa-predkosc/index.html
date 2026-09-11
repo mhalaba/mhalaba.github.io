@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morfologia — Atlas Dronów 2026</title>
+<meta name="description" content="Masa startowa wobec prędkości maksymalnej: od 920-gramowego Mavica po 8,5-tonową Kızılelmę. Skala podwójnie logarytmiczna.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .pt { cursor: pointer; transition: opacity .12s; }
+  .pt-lbl { font-family: var(--font-sans); font-size: 11px; fill: var(--paper); pointer-events: none; }
+  .pt-lbl--halo { stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: round; paint-order: stroke; }
+  .size-key circle { fill: none; stroke: var(--brass-dim); }
+  .size-key text { font-family: var(--font-mono); font-size: 9.5px; fill: var(--muted); letter-spacing: .1em; }
+</style>
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Plansza 03" data-en="Plate 03">Plansza 03</span>
+      <h1 data-pl-html="Od <em>dziewięciuset gramów</em> do ośmiu i pół tony"
+          data-en-html="From <em>nine hundred grams</em> to eight and a half tonnes">
+        Od <em>dziewięciuset gramów</em> do ośmiu i pół tony
+      </h1>
+      <p class="standfirst"
+         data-pl="Masa startowa wobec prędkości maksymalnej. Obie osie są logarytmiczne, bo inaczej cała dolna połowa katalogu zlałaby się w jeden punkt przy zerze — a to właśnie tam toczy się większość tej wojny."
+         data-en="Take-off mass against maximum speed. Both axes are logarithmic, because otherwise the whole lower half of the catalogue would collapse into a single point near zero — and that is exactly where most of this war is fought."></p>
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Rozrzut" data-en="The scatter"></h3>
+      <h2 data-pl="Masa, prędkość, zasięg — naraz" data-en="Mass, speed and reach at once"></h2>
+      <p class="prose" style="color:var(--muted);max-width:34rem"
+         data-pl="Położenie znacznika to masa i prędkość, jego wielkość to zasięg. Kolor oznacza domenę. Kliknięcie przypina podpis, żeby dało się porównać dwa modele obok siebie."
+         data-en="A mark’s position is its mass and speed, its size is its range. Colour marks the domain. A click pins the label so two models can be compared side by side."></p>
+
+      <div class="controls" id="controls"></div>
+      <div class="legend" id="legend"></div>
+      <div class="chart-frame chart-scroll"><svg class="chart" id="chart" role="img"></svg></div>
+      <div id="tablehost"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jak czytać.</b> Na wykresie są tylko modele, dla których atlas podaje i masę, i prędkość liczbowo — reszta katalogu jest opisana słownie i została pominięta, a nie oszacowana. Prędkość to wartość maksymalna, nie przelotowa; dla dronów odrzutowych te dwie liczby różnią się znacznie."
+         data-en-html="<b>How to read this.</b> The chart carries only the models for which the atlas gives both mass and speed as numbers — the rest of the catalogue is described in words and was left out rather than estimated. Speed is the maximum, not the cruise figure; for jet-powered drones the two differ considerably."></p>
+      <div class="pager">
+        <a href="../zasieg/" data-pl="← Plansza 02 · Drabina zasięgu" data-en="← Plate 02 · The ladder of reach"></a>
+        <a href="../klasy/" data-pl="Plansza 04 · Szesnaście klas →" data-en="Plate 04 · Sixteen classes →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, lang, T, PAL, DOMAIN_COLOR, MASS, SPD, LEN, imperial,
+         mass, massSpan, massTick, spd, spdSpan, len, lenSpan, ticks125,
+         logScale, el, clear, Tip, tipHTML, dataTable, nf } from '../atlas.js';
+
+let DATA = null;
+const state = { domain: 'all', pinned: new Set() };
+
+const pts = () => DATA.drones.filter(d => d.mtow && d.speed &&
+  (state.domain === 'all' || d.domain === state.domain));
+
+const mx = d => (d.mtow.lo + d.mtow.hi) / 2;
+const ms = d => (d.speed.lo + d.speed.hi) / 2;
+
+/* modele podpisane domyślnie — skrajne i charakterystyczne, nie wszystkie */
+const NAMED = new Set(['mavic3t', 'gj11', 'mq9', 'kizilelma', 'fpv10', 'shahed136', 'magura-v5', 'wiy-strila', 'flamingo']);
+
+function figures() {
+  const rows = DATA.drones.filter(d => d.mtow && d.speed);
+  const light = rows.reduce((a, b) => (mx(a) <= mx(b) ? a : b));
+  const heavy = rows.reduce((a, b) => (mx(a) >= mx(b) ? a : b));
+  const fast = rows.reduce((a, b) => (ms(a) >= ms(b) ? a : b));
+  document.getElementById('figs').innerHTML = [
+    [mass(light.mtow.lo), (lang === 'en' ? 'lightest — ' : 'najlżejszy — ') + T(light.name)],
+    [mass(heavy.mtow.hi), (lang === 'en' ? 'heaviest — ' : 'najcięższy — ') + T(heavy.name)],
+    [spd(fast.speed.hi), (lang === 'en' ? 'fastest — ' : 'najszybszy — ') + T(fast.name)],
+    [rows.length + ' / 54', lang === 'en' ? 'models with both figures' : 'modeli z obiema liczbami'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+function controls() {
+  const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
+  const host = document.getElementById('controls');
+  host.innerHTML =
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    doms.map(([id, l]) =>
+      `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
+         ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(l)}
+       </button>`).join('') +
+    `<button class="chip" type="button" id="clear">${lang === 'en' ? 'clear pins' : 'zdejmij podpisy'}</button>`;
+  host.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => { state.domain = b.dataset.d; draw(); }));
+  host.querySelector('#clear').addEventListener('click', () => { state.pinned.clear(); draw(); });
+
+  document.getElementById('legend').innerHTML = Object.entries(DATA.domains).map(([id, l]) =>
+    `<span class="legend__i"><span class="legend__sw" style="background:${DOMAIN_COLOR[id]}"></span>${T(l)}</span>`).join('') +
+    `<span class="legend__i">${lang === 'en' ? 'mark size = range' : 'wielkość znacznika = zasięg'}</span>`;
+}
+
+function chart() {
+  const rows = pts();
+  const svg = document.getElementById('chart');
+  clear(svg);
+  if (!rows.length) return;
+
+  const narrow = innerWidth < 760;
+  const W = narrow ? 640 : 900, H = narrow ? 520 : 560;
+  const padL = 62, padR = 26, padT = 26, padB = 58;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('aria-label', lang === 'en'
+    ? `Scatter plot of take-off mass against maximum speed for ${rows.length} drone models, both axes logarithmic`
+    : `Wykres rozrzutu masy startowej wobec prędkości maksymalnej dla ${rows.length} modeli dronów, obie osie logarytmiczne`);
+
+  /* Skale budujemy w jednostkach czytelnika, żeby podziałki wypadały na okrągłych
+     liczbach (1 / 10 / 100 lb), a nie na przeliczonych dekadach metrycznych. */
+  const xLo = MASS.to(0.7), xHi = MASS.to(25000);
+  const yLo = SPD.to(35), yHi = SPD.to(1300);
+  const x = logScale(xLo, xHi, padL, W - padR);
+  const y = logScale(yLo, yHi, H - padB, padT);
+  const X = d => x(MASS.to(mx(d)));
+  const Y = d => y(SPD.to(ms(d)));
+
+  const rSize = d => {
+    if (!d.range) return 4;
+    const v = (d.range.lo + d.range.hi) / 2;
+    return 4 + 11 * Math.sqrt(Math.log10(Math.max(v, 5)) / Math.log10(3000));
+  };
+
+  /* siatka */
+  const g = el('g', { class: 'grid' }, svg);
+  for (const t of ticks125(xLo, xHi, 6)) {
+    el('line', { x1: x(t), x2: x(t), y1: padT, y2: H - padB }, g);
+    el('text', { x: x(t), y: H - padB + 18, 'text-anchor': 'middle', class: 'tick-label',
+      text: massTick(t) }, g);
+  }
+  for (const t of ticks125(yLo, yHi, 5)) {
+    el('line', { x1: padL, x2: W - padR, y1: y(t), y2: y(t) }, g);
+    el('text', { x: padL - 10, y: y(t) + 4, 'text-anchor': 'end', class: 'tick-label', text: nf(t) }, g);
+  }
+  el('text', { x: W - padR, y: H - padB + 40, 'text-anchor': 'end', class: 'axis-title',
+    text: lang === 'en' ? 'take-off mass — logarithmic' : 'masa startowa — skala logarytmiczna' }, svg);
+  el('text', { x: padL - 10, y: padT - 10, 'text-anchor': 'end', class: 'axis-title', text: SPD.unit() }, svg);
+
+  /* klucz wielkości — trzy okrągłe zasięgi w jednostce czytelnika */
+  const key = el('g', { class: 'size-key', transform: `translate(${padL + 18}, ${padT + 16})` }, svg);
+  (imperial() ? [20, 200, 2000] : [30, 300, 3000]).forEach((dv, i) => {
+    const metric = LEN.from(dv);
+    const rr = 4 + 11 * Math.sqrt(Math.log10(Math.max(metric, 5)) / Math.log10(3000));
+    el('circle', { cx: i * 58, cy: 0, r: rr }, key);
+    el('text', { x: i * 58, y: 26, 'text-anchor': 'middle', text: nf(dv) + ' ' + LEN.unit() }, key);
+  });
+
+  /* punkty — od największych, żeby małe nie znikały pod dużymi */
+  const sorted = rows.slice().sort((a, b) => rSize(b) - rSize(a));
+  for (const d of sorted) {
+    const c = DOMAIN_COLOR[d.domain];
+    const cx = X(d), cy = Y(d), r = rSize(d);
+    const gg = el('g', { class: 'pt' }, svg);
+    /* obrys w kolorze tła rozdziela nakładające się znaczniki */
+    el('circle', { cx, cy, r, fill: c, 'fill-opacity': .55, stroke: PAL.ink, 'stroke-width': 2 }, gg);
+    el('circle', { cx, cy, r, fill: 'none', stroke: c, 'stroke-width': 1.5 }, gg);
+
+    if (NAMED.has(d.id) || state.pinned.has(d.id)) {
+      el('text', { x: cx + r + 6, y: cy + 4, class: 'pt-lbl pt-lbl--halo', text: T(d.name) }, gg);
+    }
+    const type = DATA.types.find(t => t.id === d.typeId);
+    const show = ev => Tip.show(tipHTML({
+      title: T(d.name),
+      sub: [T(type?.short), T(d.origin)].filter(Boolean).join(' · '),
+      rows: [
+        [lang === 'en' ? 'Mass' : 'Masa', massSpan(d.mtow.lo, d.mtow.hi)],
+        [lang === 'en' ? 'Max speed' : 'Prędkość maks.', spdSpan(d.speed.lo, d.speed.hi)],
+        [lang === 'en' ? 'Range' : 'Zasięg', d.range ? lenSpan(d.range.lo, d.range.hi) : '—'],
+      ],
+      raw: d.mtow.raw + ' · ' + d.speed.raw,
+    }), ev);
+    gg.addEventListener('mouseenter', show);
+    gg.addEventListener('mousemove', ev => Tip.move(ev));
+    gg.addEventListener('mouseleave', () => Tip.hide());
+    gg.addEventListener('click', () => {
+      state.pinned.has(d.id) ? state.pinned.delete(d.id) : state.pinned.add(d.id);
+      chart();
+    });
+  }
+}
+
+let made = false;
+function table() {
+  if (made) return; made = true;
+  dataTable(document.getElementById('tablehost'), {
+    caption: { pl: 'Masa, prędkość i zasięg — pełne dane planszy', en: 'Mass, speed and range — the full data of this plate' },
+    cols: () => ([
+      { label: 'Model' },
+      { label: lang === 'en' ? 'Domain' : 'Domena' },
+      { label: lang === 'en' ? 'Mass' : 'Masa', num: true },
+      { label: lang === 'en' ? 'Max speed' : 'Prędkość maks.', num: true },
+      { label: lang === 'en' ? 'Range' : 'Zasięg', num: true },
+    ]),
+    rows: () => pts().slice().sort((a, b) => mx(a) - mx(b)).map(d => [
+      T(d.name), T(DATA.domains[d.domain]),
+      massSpan(d.mtow.lo, d.mtow.hi),
+      spdSpan(d.speed.lo, d.speed.hi),
+      d.range ? lenSpan(d.range.lo, d.range.hi) : '—',
+    ]),
+  });
+}
+
+function draw() { figures(); controls(); chart(); table(); }
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>

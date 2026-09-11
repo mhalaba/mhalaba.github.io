@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ekonomia asymetrii — Atlas Dronów 2026</title>
+<meta name="description" content="Koszt jednostkowy 19 modeli bezzałogowców na skali logarytmicznej: od 400 dolarów za FPV do 32 milionów za MQ-9 Reaper.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Plansza 01" data-en="Plate 01">Plansza 01</span>
+      <h1 data-pl-html="Czterysta dolarów, <em>trzydzieści dwa miliony</em>"
+          data-en-html="Four hundred dollars, <em>thirty-two million</em>">
+        Czterysta dolarów, <em>trzydzieści dwa miliony</em>
+      </h1>
+      <p class="standfirst"
+         data-pl="Koszt jednostkowy dziewiętnastu modeli, rozłożony na skali logarytmicznej. Cztery rzędy wielkości dzielą dron FPV sklejony w garażu od śmigłowcowego drona rozpoznawczego z katalogu General Atomics — a oba latają nad tym samym polem."
+         data-en="Unit cost for nineteen models, laid out on a logarithmic scale. Four orders of magnitude separate an FPV drone glued together in a garage from a reconnaissance aircraft out of the General Atomics catalogue — and both fly over the same field."></p>
+
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Drabina kosztu" data-en="The cost ladder"></h3>
+      <h2 data-pl="Każdy model na swojej dekadzie" data-en="Every model on its own decade"></h2>
+      <p class="prose" style="color:var(--muted);max-width:34rem"
+         data-pl="Znacznik pokazuje widełki podawane w atlasie — pasmo od dolnej do górnej wartości, kropka na środku. Skala jest logarytmiczna: każdy pionowy podział to dziesięciokrotność."
+         data-en="Each mark shows the bracket the atlas gives — a band from the low to the high figure, with a dot at its centre. The scale is logarithmic: every vertical division is a tenfold step."></p>
+
+      <div class="controls" id="controls"></div>
+      <div class="chart-frame chart-scroll"><svg class="chart" id="chart" role="img"></svg></div>
+      <div id="tablehost"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Pojedynek" data-en="The duel"></h3>
+      <h2 data-pl="Ile kosztuje strącić to, co leci" data-en="What it costs to bring down what is flying"></h2>
+      <p class="prose"
+         data-pl="Najciekawsza liczba w tej tabeli nie jest ceną — jest ilorazem. Przechwytujący dron kosztuje ułamek tego, w co trafia, i to właśnie ta proporcja, a nie sama technika, zmieniła arytmetykę obrony powietrznej w 2026 roku."
+         data-en="The most interesting number here is not a price but a ratio. An interceptor costs a fraction of what it hits, and it is that proportion, rather than the technology itself, that changed the arithmetic of air defence in 2026."></p>
+      <div id="duels"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jak czytać.</b> Ceny pochodzą z pól tekstowych atlasu i oznaczają różne rzeczy: koszt wytworzenia, cenę katalogową albo budżet zakupowy. Trzy pozycje dotyczą całego kompleksu, nie pojedynczego egzemplarza — są domyślnie ukryte i wyraźnie oznaczone po włączeniu. Przeliczenia z EUR i UAH po kursie zapisanym w data.json."
+         data-en-html="<b>How to read this.</b> Prices come from the atlas text fields and mean different things: manufacturing cost, list price, or procurement budget. Three entries cover a whole system rather than a single airframe — they are hidden by default and clearly marked once shown. Conversions from EUR and UAH use the rate recorded in data.json."></p>
+      <div class="pager">
+        <a href="../" data-pl="← Wszystkie plansze" data-en="← All plates"></a>
+        <a href="../zasieg/" data-pl="Plansza 02 · Drabina zasięgu →" data-en="Plate 02 · The ladder of reach →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, onLang, lang, T, PAL, DOMAIN_COLOR, usd, usdSpan, logScale, extent,
+         el, clear, Tip, tipHTML, dataTable, nf } from '../atlas.js';
+
+const state = { showSystem: false };
+let DATA = null;
+
+/* ── dobór zbioru ───────────────────────────────────────────────── */
+const priced = () => DATA.drones
+  .filter(d => d.cost && (state.showSystem || !d.cost.system))
+  .sort((a, b) => (a.cost.lo + a.cost.hi) / 2 - (b.cost.lo + b.cost.hi) / 2);
+
+const mid = d => (d.cost.lo + d.cost.hi) / 2;
+
+/* ── liczby wiodące ─────────────────────────────────────────────── */
+function figures() {
+  const unit = DATA.drones.filter(d => d.cost && !d.cost.system);
+  const lo = unit.reduce((a, b) => (a.cost.lo <= b.cost.lo ? a : b));
+  const hi = unit.reduce((a, b) => (a.cost.hi >= b.cost.hi ? a : b));
+  const ratio = Math.round(hi.cost.hi / lo.cost.lo);
+  const host = document.getElementById('figs');
+  host.innerHTML = [
+    [usd(lo.cost.lo), lang === 'en' ? `cheapest — ${T(lo.name)}` : `najtańszy — ${T(lo.name)}`],
+    [usd(hi.cost.hi), lang === 'en' ? `dearest — ${T(hi.name)}` : `najdroższy — ${T(hi.name)}`],
+    ['1 : ' + nf(ratio), lang === 'en' ? 'the span between them' : 'rozpiętość między nimi'],
+    [String(unit.length) + ' / 54', lang === 'en' ? 'models with a published unit price' : 'modeli z jawną ceną jednostkową'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+/* ── sterowanie ─────────────────────────────────────────────────── */
+function controls() {
+  const host = document.getElementById('controls');
+  host.innerHTML =
+    `<span class="controls__label">${lang === 'en' ? 'View' : 'Widok'}</span>
+     <label class="switch">
+       <input type="checkbox" id="sys" ${state.showSystem ? 'checked' : ''}>
+       <span>${lang === 'en' ? 'include whole-system prices' : 'pokaż ceny całych kompleksów'}</span>
+     </label>`;
+  host.querySelector('#sys').addEventListener('change', e => {
+    state.showSystem = e.target.checked;
+    draw();
+  });
+}
+
+/* ── wykres ─────────────────────────────────────────────────────── */
+function chart() {
+  const rows = priced();
+  const svg = document.getElementById('chart');
+  clear(svg);
+
+  const narrow = innerWidth < 720;
+  const padL = narrow ? 128 : 210, padR = narrow ? 64 : 96, padT = 34, padB = 46;
+  const rowH = 27;
+  const W = Math.max(svg.clientWidth || 900, narrow ? 460 : 720);
+  const H = padT + rows.length * rowH + padB;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('height', H);
+  svg.setAttribute('aria-label', lang === 'en'
+    ? `Unit cost of ${rows.length} drone models on a logarithmic scale`
+    : `Koszt jednostkowy ${rows.length} modeli dronów na skali logarytmicznej`);
+
+  const [lo, hi] = extent(rows, d => d.cost.lo).map((v, i) => (i ? v : v));
+  const hiV = Math.max(...rows.map(d => d.cost.hi));
+  const x = logScale(Math.min(lo, 400) * 0.8, hiV * 1.25, padL, W - padR);
+
+  /* siatka dekadowa */
+  const g = el('g', { class: 'grid' }, svg);
+  for (const t of x.ticks()) {
+    el('line', { x1: x(t), x2: x(t), y1: padT - 10, y2: H - padB + 4 }, g);
+    el('text', { x: x(t), y: H - padB + 20, 'text-anchor': 'middle', class: 'tick-label', text: usd(t) }, g);
+  }
+  el('text', { x: padL, y: H - padB + 38, class: 'axis-title',
+    text: lang === 'en' ? 'unit cost, USD — logarithmic' : 'koszt jednostkowy, USD — skala logarytmiczna' }, svg);
+
+  rows.forEach((d, i) => {
+    const y = padT + i * rowH + rowH / 2;
+    const c = DOMAIN_COLOR[d.domain];
+    const x0 = x(d.cost.lo), x1 = x(d.cost.hi);
+    const rg = el('g', { class: 'row-g' }, svg);
+
+    /* etykieta wiersza */
+    el('text', {
+      x: padL - 12, y: y + 4, 'text-anchor': 'end', class: 'row-label',
+      text: (narrow && T(d.name).length > 17) ? T(d.name).slice(0, 16) + '…' : T(d.name),
+    }, rg);
+
+    /* pasmo widełek — 2 px odstępu od tła zapewnia obrys w kolorze tła */
+    if (x1 - x0 > 1.5) {
+      el('rect', {
+        x: x0, y: y - 3.5, width: Math.max(x1 - x0, 2), height: 7, rx: 3.5,
+        fill: c, opacity: .38, class: 'bar',
+      }, rg);
+    }
+    /* kropka na wartości środkowej */
+    el('circle', { cx: x(mid(d)), cy: y, r: 5, fill: c, class: 'dot' }, rg);
+
+    /* wartość — etykieta bezpośrednia zamiast polegania na kolorze */
+    el('text', {
+      x: Math.max(x1, x(mid(d))) + 11, y: y + 4, class: 'val-label',
+      text: usdSpan(d.cost.lo, d.cost.hi),
+    }, rg);
+
+    if (d.cost.system) {
+      el('text', { x: padL - 12, y: y + 15, 'text-anchor': 'end', class: 'tick-label',
+        text: lang === 'en' ? 'whole system' : 'cały kompleks' }, rg);
+    }
+
+    /* powierzchnia trafienia szersza niż znacznik */
+    const hit = el('rect', { x: 0, y: y - rowH / 2, width: W, height: rowH, class: 'row-hit' }, rg);
+    const type = DATA.types.find(t => t.id === d.typeId);
+    const show = ev => Tip.show(tipHTML({
+      title: T(d.name),
+      sub: [T(type?.short), T(DATA.domains[d.domain])].filter(Boolean).join(' · '),
+      rows: [
+        [lang === 'en' ? 'Unit cost' : 'Koszt', usdSpan(d.cost.lo, d.cost.hi)],
+        [lang === 'en' ? 'Origin' : 'Pochodzenie', T(d.origin)],
+        [lang === 'en' ? 'In service' : 'W służbie', d.year],
+      ],
+      raw: d.cost.raw,
+    }), ev);
+    hit.addEventListener('mouseenter', show);
+    hit.addEventListener('mousemove', ev => Tip.move(ev));
+    hit.addEventListener('mouseleave', () => Tip.hide());
+  });
+}
+
+/* ── pojedynki ──────────────────────────────────────────────────── */
+function duels() {
+  const by = id => DATA.drones.find(d => d.id === id);
+  const pairs = [
+    { a: 'sting', b: 'shahed136' },
+    { a: 'p1sun', b: 'shahed136' },
+    { a: 'wiy-strila', b: 'lancet' },
+    { a: 'merops', b: 'shahed136' },
+  ];
+  const host = document.getElementById('duels');
+  host.innerHTML = `<div class="plate-grid" style="margin-top:1.5rem">` + pairs.map(({ a, b }) => {
+    const A = by(a), B = by(b);
+    if (!A?.cost || !B?.cost) return '';
+    const r = Math.round(((B.cost.lo + B.cost.hi) / 2) / ((A.cost.lo + A.cost.hi) / 2));
+    const sys = A.cost.system ? (lang === 'en' ? ' (whole system)' : ' (cały kompleks)') : '';
+    return `<div class="plate-card" style="min-height:auto">
+      <span class="plate-card__no">${lang === 'en' ? 'ratio' : 'stosunek'} 1 : ${nf(r)}</span>
+      <p class="plate-card__t">${T(A.name)}</p>
+      <p class="plate-card__d">
+        <b style="color:var(--brass)">${usdSpan(A.cost.lo, A.cost.hi)}</b>${sys}<br>
+        ${lang === 'en' ? 'against' : 'przeciw'} ${T(B.name)} — <b style="color:var(--fg)">${usdSpan(B.cost.lo, B.cost.hi)}</b>
+      </p>
+    </div>`;
+  }).join('') + `</div>`;
+}
+
+/* ── tabela ─────────────────────────────────────────────────────── */
+let tableMade = false;
+function table() {
+  if (tableMade) return;
+  tableMade = true;
+  dataTable(document.getElementById('tablehost'), {
+    caption: { pl: 'Koszt jednostkowy — pełne dane planszy', en: 'Unit cost — the full data of this plate' },
+    cols: () => ([
+      { label: lang === 'en' ? 'Model' : 'Model' },
+      { label: lang === 'en' ? 'Class' : 'Klasa' },
+      { label: lang === 'en' ? 'Cost, USD' : 'Koszt, USD', num: true },
+      { label: lang === 'en' ? 'As written in the atlas' : 'Zapis w atlasie' },
+    ]),
+    rows: () => priced().map(d => [
+      T(d.name),
+      T(DATA.types.find(t => t.id === d.typeId)?.short) || '—',
+      usdSpan(d.cost.lo, d.cost.hi),
+      d.cost.raw,
+    ]),
+  });
+}
+
+function draw() { figures(); controls(); chart(); duels(); table(); }
+
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>

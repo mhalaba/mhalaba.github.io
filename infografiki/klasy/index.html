@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Szesnaście klas — Atlas Dronów 2026</title>
+<meta name="description" content="Taksonomia bezzałogowców w szesnastu klasach: od FPV kamikaze po stealth UCAV, z kopertą zasięgu każdej klasy.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .cls-grid {
+    display: grid; gap: 1px; background: var(--line);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+    border: 1px solid var(--line); margin-top: 1.5rem;
+  }
+  .cls {
+    background: var(--ink-2); padding: 1.15rem 1.25rem 1.25rem;
+    display: flex; flex-direction: column; gap: .5rem;
+    border: 0; text-align: left; cursor: pointer; font: inherit; color: inherit;
+    transition: background .15s;
+  }
+  .cls:hover, .cls[aria-expanded="true"] { background: var(--ink-3); }
+  .cls__top { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
+  .cls__name { font-family: var(--font-serif); font-size: 1.08rem; font-weight: 600; color: var(--paper); line-height: 1.25; }
+  .cls__n {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+    color: var(--ink); background: var(--brass); padding: .1rem .4rem; flex: none;
+  }
+  .cls__dom {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em;
+    text-transform: uppercase; display: inline-flex; align-items: center; gap: .4rem;
+  }
+  .cls__env { margin: .35rem 0 .1rem; }
+  .cls__rng {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); letter-spacing: .06em;
+  }
+  .cls__members {
+    margin: .25rem 0 0; padding: .6rem 0 0; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--fg); line-height: 1.65; list-style: none;
+  }
+  .cls__members li { display: flex; justify-content: space-between; gap: .75rem; }
+  .cls__members span:last-child { color: var(--muted); font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+  .axis-strip { margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Plansza 04" data-en="Plate 04">Plansza 04</span>
+      <h1 data-pl-html="Szesnaście sposobów, <em>żeby to zrobić</em>"
+          data-en-html="Sixteen ways <em>to do it</em>">
+        Szesnaście sposobów, <em>żeby to zrobić</em>
+      </h1>
+      <p class="standfirst"
+         data-pl="Katalog dzieli bezzałogowce na szesnaście klas. Każda ma własną kopertę zasięgu — i to ona, bardziej niż wygląd czy nazwa producenta, decyduje o tym, do czego dana maszyna się nadaje."
+         data-en="The catalogue sorts uncrewed systems into sixteen classes. Each has its own envelope of reach — and that envelope, more than any silhouette or maker’s name, decides what the machine is good for."></p>
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Klasy" data-en="The classes"></h3>
+      <h2 data-pl="Koperta zasięgu każdej klasy" data-en="The reach envelope of each class"></h2>
+      <p class="prose" style="color:var(--muted);max-width:34rem"
+         data-pl="Pasek pod nazwą pokazuje, gdzie na wspólnej skali logarytmicznej leży zasięg modeli danej klasy. Kliknięcie karty rozwija listę jej przedstawicieli."
+         data-en="The bar under each name shows where that class’s models sit on one shared logarithmic scale. Clicking a card opens the list of its members."></p>
+
+      <div class="controls" id="controls"></div>
+      <div class="cls-grid" id="grid"></div>
+
+      <div class="axis-strip">
+        <svg class="chart" id="axis" role="img" aria-hidden="true"></svg>
+      </div>
+      <div id="tablehost"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jak czytać.</b> Koperta liczona jest z modeli w katalogu, nie z deklaracji producentów — dlatego bywa węższa niż widełki, które atlas podaje słownie dla całej klasy. Oba zapisy są na karcie: pasek to nasze dane, wiersz pod nim to opis klasy z atlasu."
+         data-en-html="<b>How to read this.</b> The envelope is computed from the models in the catalogue, not from manufacturers’ claims — which is why it is sometimes narrower than the bracket the atlas states in words for the class as a whole. Both are on the card: the bar is our data, the line beneath it is the atlas’s own description of the class."></p>
+      <div class="pager">
+        <a href="../masa-predkosc/" data-pl="← Plansza 03 · Morfologia" data-en="← Plate 03 · Morphology"></a>
+        <a href="../teatry/" data-pl="Plansza 05 · Teatry i proliferacja →" data-en="Plate 05 · Theatres and proliferation →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, lang, T, PAL, DOMAIN_COLOR, LEN, len, lenSpan, imperial,
+         logScale, ticks125, el, clear, dataTable, nf } from '../atlas.js';
+
+let DATA = null;
+const state = { domain: 'all', open: new Set() };
+
+/* wspólna skala dla wszystkich kopert — inaczej paski nie dałyby się porównać */
+const SCALE_LO = 4, SCALE_HI = 8000;
+
+function classes() {
+  return DATA.types
+    .filter(t => state.domain === 'all' || t.domain === state.domain)
+    .map(t => {
+      const members = DATA.drones.filter(d => d.typeId === t.id);
+      const withR = members.filter(d => d.range);
+      const lo = withR.length ? Math.min(...withR.map(d => d.range.lo)) : null;
+      const hi = withR.length ? Math.max(...withR.map(d => d.range.hi)) : null;
+      return { ...t, members, lo, hi };
+    })
+    .sort((a, b) => (a.lo ?? 1e9) - (b.lo ?? 1e9));
+}
+
+function figures() {
+  const all = DATA.types;
+  const biggest = all
+    .map(t => ({ t, n: DATA.drones.filter(d => d.typeId === t.id).length }))
+    .sort((a, b) => b.n - a.n)[0];
+  const doms = {};
+  for (const t of all) doms[t.domain] = (doms[t.domain] || 0) + 1;
+  document.getElementById('figs').innerHTML = [
+    ['16', lang === 'en' ? 'classes in the taxonomy' : 'klas w taksonomii'],
+    ['54', lang === 'en' ? 'models sorted into them' : 'modeli w nich rozłożonych'],
+    [String(biggest.n), (lang === 'en' ? 'largest class — ' : 'najliczniejsza klasa — ') + T(biggest.t.short)],
+    [`${doms.air} · ${doms.sea} · ${doms.ground}`, lang === 'en' ? 'classes by air, sea, ground' : 'klas: powietrze, morze, ląd'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+function controls() {
+  const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
+  const host = document.getElementById('controls');
+  host.innerHTML =
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    doms.map(([id, l]) =>
+      `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
+         ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(l)}
+       </button>`).join('');
+  host.querySelectorAll('[data-d]').forEach(b =>
+    b.addEventListener('click', () => { state.domain = b.dataset.d; draw(); }));
+}
+
+/* pasek koperty — miniatura na tej samej skali co oś pod siatką */
+function envelope(c, w = 236, h = 12) {
+  const s = logScale(SCALE_LO, SCALE_HI, 0, w);
+  const col = DOMAIN_COLOR[c.domain];
+  if (c.lo == null) {
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+      <line x1="0" y1="${h / 2}" x2="${w}" y2="${h / 2}" stroke="${PAL.line}" stroke-width="1"/></svg>`;
+  }
+  const x0 = s(c.lo), x1 = s(c.hi);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <line x1="0" y1="${h / 2}" x2="${w}" y2="${h / 2}" stroke="${PAL.line}" stroke-width="1"/>
+    <rect x="${x0}" y="${h / 2 - 3}" width="${Math.max(x1 - x0, 3)}" height="6" rx="3" fill="${col}" opacity="0.75"/>
+    <circle cx="${x0}" cy="${h / 2}" r="3" fill="${col}" stroke="${PAL.ink}" stroke-width="1.5"/>
+    <circle cx="${x1}" cy="${h / 2}" r="3" fill="${col}" stroke="${PAL.ink}" stroke-width="1.5"/>
+  </svg>`;
+}
+
+function grid() {
+  const list = classes();
+  document.getElementById('grid').innerHTML = list.map(c => {
+    const open = state.open.has(c.id);
+    const members = c.members.slice().sort((a, b) =>
+      ((a.range?.lo ?? 1e9) - (b.range?.lo ?? 1e9)));
+    return `<button class="cls" type="button" data-c="${c.id}" aria-expanded="${open}">
+      <span class="cls__top">
+        <span class="cls__name">${T(c.name)}</span>
+        <span class="cls__n">${c.members.length}</span>
+      </span>
+      <span class="cls__dom" style="color:${DOMAIN_COLOR[c.domain]}">
+        <span class="chip__dot" style="background:${DOMAIN_COLOR[c.domain]};margin:0"></span>${T(DATA.domains[c.domain])}
+      </span>
+      <span class="cls__env">${envelope(c)}</span>
+      <span class="cls__rng">${c.lo == null
+        ? (lang === 'en' ? 'no numeric range in this class' : 'brak zasięgu liczbowego w tej klasie')
+        : lenSpan(c.lo, c.hi)}</span>
+      <span class="cls__rng" style="color:var(--brass-dim)">${lang === 'en' ? 'atlas: ' : 'atlas: '}${T(c.range)}</span>
+      ${open ? `<ul class="cls__members">${members.map(d =>
+        `<li><span>${T(d.name)}</span><span>${d.range ? lenSpan(d.range.lo, d.range.hi) : '—'}</span></li>`).join('')}</ul>` : ''}
+    </button>`;
+  }).join('');
+
+  document.getElementById('grid').querySelectorAll('[data-c]').forEach(b =>
+    b.addEventListener('click', () => {
+      const id = b.dataset.c;
+      state.open.has(id) ? state.open.delete(id) : state.open.add(id);
+      grid();
+    }));
+}
+
+/* oś odniesienia pod siatką — tłumaczy, co znaczy położenie paska */
+function axis() {
+  const svg = document.getElementById('axis');
+  clear(svg);
+  const W = 900, H = 44, padL = 0, padR = 0;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('height', H);
+  const inner = 236;                                   /* ta sama szerokość co miniatura */
+  const s = logScale(SCALE_LO, SCALE_HI, padL, inner);
+  const k = W / inner;                                 /* rozciągamy proporcjonalnie */
+  el('line', { x1: 0, x2: W, y1: 12, y2: 12, stroke: PAL.line }, svg);
+  for (const dv of ticks125(LEN.to(SCALE_LO), LEN.to(SCALE_HI), 8)) {
+    const px = s(LEN.from(dv)) * k;
+    el('line', { x1: px, x2: px, y1: 6, y2: 18, stroke: PAL.brassDim }, svg);
+    el('text', { x: px, y: 34, 'text-anchor': 'middle', class: 'tick-label',
+      text: nf(dv) + ' ' + LEN.unit() }, svg);
+  }
+}
+
+let made = false;
+function table() {
+  if (made) return; made = true;
+  dataTable(document.getElementById('tablehost'), {
+    caption: { pl: 'Klasy i ich koperty zasięgu', en: 'Classes and their reach envelopes' },
+    cols: () => ([
+      { label: lang === 'en' ? 'Class' : 'Klasa' },
+      { label: lang === 'en' ? 'Domain' : 'Domena' },
+      { label: lang === 'en' ? 'Models' : 'Modeli', num: true },
+      { label: lang === 'en' ? 'Envelope, from the catalogue' : 'Koperta z katalogu', num: true },
+      { label: lang === 'en' ? 'Atlas description' : 'Opis w atlasie' },
+    ]),
+    rows: () => classes().map(c => [
+      T(c.name), T(DATA.domains[c.domain]), String(c.members.length),
+      c.lo == null ? '—' : lenSpan(c.lo, c.hi), T(c.range),
+    ]),
+  });
+}
+
+function draw() { figures(); controls(); grid(); axis(); table(); }
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plansze — Atlas Dronów 2026</title>
+<meta name="description" content="Pięć interaktywnych plansz na danych Atlasu Dronów 2026: koszt, zasięg, morfologia, taksonomia i teatry.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Pięć plansz" data-en="Five plates">Pięć plansz</span>
+      <h1 data-pl-html="Katalog, który daje się <em>zmierzyć</em>"
+          data-en-html="A catalogue you can <em>measure</em>">
+        Katalog, który daje się <em>zmierzyć</em>
+      </h1>
+      <p class="standfirst"
+         data-pl="Pięćdziesiąt cztery modele atlasu opisane są słowami. Te plansze wyciągają z tych opisów liczby — koszt, zasięg, masę, prędkość, pochodzenie — i pokazują, co z nich wynika, gdy zestawić je obok siebie."
+         data-en="The atlas describes its fifty-four models in words. These plates pull the numbers out of those descriptions — cost, reach, mass, speed, origin — and show what follows once they are set side by side."></p>
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Spis plansz" data-en="The plates"></h3>
+      <div class="plate-grid" id="plates"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Metoda" data-en="Method"></h3>
+      <h2 data-pl="Skąd biorą się te liczby" data-en="Where the numbers come from"></h2>
+      <div class="prose">
+        <p data-pl="Atlas zapisuje dane taktyczno-techniczne jako zdania, nie jako pola liczbowe: „1000–2500 km (90 kg: ~650 km)”, „ok. 6 t”, „30–50 tys. USD (wytworzenie)”. Skrypt wyciąga z każdego takiego zapisu pierwszą parę liczba–jednostka wraz z widełkami i zapisuje ją obok oryginału."
+           data-en="The atlas records its technical data as sentences rather than numeric fields: “1,000–2,500 km (90 kg: ~650 km)”, “about 6 t”, “USD 30–50 thousand (to manufacture)”. A script pulls the first number-and-unit pair, brackets included, out of each such entry and stores it alongside the original."></p>
+        <p data-pl="Tam, gdzie atlas podaje wyłącznie opis słowny — „strefa OPL”, „kilka kilometrów”, „dane niejawne” — nie ma liczby i model po prostu nie pojawia się na danej planszy. Żadna wartość nie została oszacowana ani uzupełniona spoza katalogu."
+           data-en="Where the atlas gives only words — “air-defence zone”, “a few kilometres”, “classified” — there is no number, and the model simply does not appear on that plate. No value has been estimated or brought in from outside the catalogue."></p>
+        <p data-pl-html="Oryginalny zapis jest widoczny w podpowiedzi każdego znacznika i w tabeli danych pod każdym wykresem, więc każdą liczbę da się skonfrontować ze źródłem. Cały zbiór leży w <a href='./data.json'>data.json</a>, a skrypty, które go budują — w katalogu <code>_tools</code>."
+           data-en-html="The original wording appears in every mark’s tooltip and in the data table under every chart, so each figure can be checked against its source. The whole set sits in <a href='./data.json'>data.json</a>, and the scripts that build it are in the <code>_tools</code> directory."></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jednostki.</b> Wersja polska podaje kilometry, kilogramy i km/h. Wersja angielska przelicza je na mile, funty i mph, z wartością metryczną w nawiasie. Kwoty są w dolarach; przeliczenia z euro i hrywny po kursie zapisanym w <code>data.json</code>."
+         data-en-html="<b>Units.</b> The Polish version gives kilometres, kilograms and km/h. The English version converts to miles, pounds and mph, with the metric value in brackets. Sums are in dollars; conversions from euro and hryvnia use the rate recorded in <code>data.json</code>."></p>
+      <div class="pager">
+        <a href="/" data-pl="← Wróć do atlasu" data-en="← Back to the atlas"></a>
+        <a href="./koszt/" data-pl="Zacznij od planszy 01 →" data-en="Start with plate 01 →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, lang, T, PAL, DOMAIN_COLOR, logScale, usd, len, nf } from './atlas.js';
+
+let DATA = null;
+
+const PLATES = [
+  { n: '01', slug: 'koszt',
+    pl: 'Ekonomia asymetrii', en: 'The economics of asymmetry',
+    dpl: 'Koszt jednostkowy dziewiętnastu modeli na skali logarytmicznej, od 400 dolarów do 32 milionów — i iloraz, który zmienił arytmetykę obrony powietrznej.',
+    den: 'Unit cost for nineteen models on a logarithmic scale, from four hundred dollars to thirty-two million — and the ratio that changed the arithmetic of air defence.' },
+  { n: '02', slug: 'zasieg',
+    pl: 'Drabina zasięgu', en: 'The ladder of reach',
+    dpl: 'Wachlarz promieniowy: czterdzieści osiem modeli rozpiętych od punktu startu, pierścienie rosnące dziesięciokrotnie.',
+    den: 'A radial fan: forty-eight models opened out from the launch point, with rings growing tenfold.' },
+  { n: '03', slug: 'masa-predkosc',
+    pl: 'Morfologia', en: 'Morphology',
+    dpl: 'Masa wobec prędkości, wielkość znacznika to zasięg. Od 920-gramowego Mavica po 8,5-tonową Kızılelmę.',
+    den: 'Mass against speed, with mark size for range. From the 920-gram Mavic to the 8.5-tonne Kızılelma.' },
+  { n: '04', slug: 'klasy',
+    pl: 'Szesnaście klas', en: 'Sixteen classes',
+    dpl: 'Taksonomia katalogu i koperta zasięgu każdej klasy, wyliczona z modeli, a nie z deklaracji producentów.',
+    den: 'The catalogue’s taxonomy and each class’s reach envelope, computed from the models rather than from makers’ claims.' },
+  { n: '05', slug: 'teatry',
+    pl: 'Teatry i proliferacja', en: 'Theatres and proliferation',
+    dpl: 'Macierz ośmiu krajów pochodzenia wobec sześciu teatrów — mapa tego, jak projekt odrywa się od miejsca powstania.',
+    den: 'A matrix of eight countries of origin against six theatres — a map of how a design drifts away from the place that made it.' },
+];
+
+/* miniatura: kilka znaczników na skali logarytmicznej, ten sam język wizualny co plansze */
+function spark(slug) {
+  const w = 210, h = 30;
+  const box = (inner) => `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" style="margin-top:.75rem">${inner}</svg>`;
+  const base = `<line x1="0" y1="${h - 8}" x2="${w}" y2="${h - 8}" stroke="${PAL.line}"/>`;
+
+  if (slug === 'koszt') {
+    const v = DATA.drones.filter(d => d.cost && !d.cost.system).map(d => (d.cost.lo + d.cost.hi) / 2);
+    const s = logScale(300, 4e7, 3, w - 3);
+    return box(base + v.map(x => `<circle cx="${s(x).toFixed(1)}" cy="${h - 8}" r="3" fill="${PAL.cat[0]}" fill-opacity=".75"/>`).join(''));
+  }
+  if (slug === 'zasieg') {
+    const v = DATA.drones.filter(d => d.range).map(d => (d.range.lo + d.range.hi) / 2);
+    const s = logScale(4, 8000, 3, w - 3);
+    return box(base + v.map(x => `<line x1="${s(x).toFixed(1)}" y1="${h - 14}" x2="${s(x).toFixed(1)}" y2="${h - 2}" stroke="${PAL.cat[0]}" stroke-opacity=".7"/>`).join(''));
+  }
+  if (slug === 'masa-predkosc') {
+    const pts = DATA.drones.filter(d => d.mtow && d.speed);
+    const sx = logScale(0.7, 25000, 4, w - 4), sy = logScale(35, 1300, h - 4, 4);
+    return box(pts.map(d => {
+      const c = DOMAIN_COLOR[d.domain];
+      return `<circle cx="${sx((d.mtow.lo + d.mtow.hi) / 2).toFixed(1)}" cy="${sy((d.speed.lo + d.speed.hi) / 2).toFixed(1)}" r="2.6" fill="${c}" fill-opacity=".7"/>`;
+    }).join(''));
+  }
+  if (slug === 'klasy') {
+    const s = logScale(4, 8000, 0, w);
+    return box(DATA.types.map((t, i) => {
+      const m = DATA.drones.filter(d => d.typeId === t.id && d.range);
+      if (!m.length) return '';
+      const lo = Math.min(...m.map(d => d.range.lo)), hi = Math.max(...m.map(d => d.range.hi));
+      const y = 3 + i * 1.6;
+      return `<line x1="${s(lo).toFixed(1)}" y1="${y.toFixed(1)}" x2="${s(hi).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${DOMAIN_COLOR[t.domain]}" stroke-width="1.4" stroke-opacity=".8"/>`;
+    }).join(''));
+  }
+  /* teatry — miniatura macierzy */
+  const counts = {};
+  for (const d of DATA.drones) for (const t of d.theaters || []) counts[t] = (counts[t] || 0) + 1;
+  const cells = DATA.theaters.map((t, j) => {
+    const v = counts[t.id] || 0;
+    const i = v >= 32 ? 4 : v >= 16 ? 3 : v >= 8 ? 2 : v >= 4 ? 1 : 0;
+    return `<rect x="${j * 34 + 2}" y="6" width="30" height="18" fill="${PAL.seq[i]}"/>`;
+  }).join('');
+  return box(cells);
+}
+
+function figures() {
+  const c = k => DATA.drones.filter(d => d[k]).length;
+  document.getElementById('figs').innerHTML = [
+    ['54', lang === 'en' ? 'models in the catalogue' : 'modeli w katalogu'],
+    [String(c('range')), lang === 'en' ? 'with a numeric range' : 'z zasięgiem liczbowym'],
+    [String(c('mtow')), lang === 'en' ? 'with a take-off mass' : 'z masą startową'],
+    [String(DATA.drones.filter(d => d.cost && !d.cost.system).length), lang === 'en' ? 'with a unit price' : 'z ceną jednostkową'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+function plates() {
+  document.getElementById('plates').innerHTML = PLATES.map(p =>
+    `<a class="plate-card" href="./${p.slug}/">
+       <span class="plate-card__no">${lang === 'en' ? 'Plate' : 'Plansza'} ${p.n}</span>
+       <p class="plate-card__t">${lang === 'en' ? p.en : p.pl}</p>
+       <p class="plate-card__d">${lang === 'en' ? p.den : p.dpl}</p>
+       <span class="plate-card__spark">${spark(p.slug)}</span>
+       <span class="plate-card__go">${lang === 'en' ? 'Open the plate →' : 'Otwórz planszę →'}</span>
+     </a>`).join('');
+}
+
+function draw() { figures(); plates(); }
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>

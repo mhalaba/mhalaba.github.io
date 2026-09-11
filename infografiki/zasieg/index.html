@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drabina zasięgu — Atlas Dronów 2026</title>
+<meta name="description" content="Zasięg 48 modeli bezzałogowców jako wachlarz promieniowy: od 5 km drona FPV do 7500 km Akıncı.">
+<meta name="theme-color" content="#0e1412">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .fan-wrap { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 960px) { .fan-wrap { grid-template-columns: 1fr 15rem; align-items: start; } }
+  .fan-side { border-left: 1px solid var(--line); padding-left: 1.25rem; }
+  .fan-side h4 {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--brass); margin: 0 0 .6rem; font-weight: 500;
+  }
+  .fan-side dl { margin: 0 0 1.25rem; font-size: 12.5px; }
+  .fan-side dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--muted); margin-top: .55rem; }
+  .fan-side dd { margin: .1rem 0 0; color: var(--fg); }
+  .spoke { cursor: pointer; }
+  .ring { fill: none; stroke: var(--line); stroke-dasharray: 2 5; }
+  .ring-lbl { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em;
+    fill: var(--brass-dim); text-transform: uppercase; }
+  .sector-lbl { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+    fill: var(--muted); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<header class="site-head"><div class="site-head__in"></div></header>
+
+<main>
+  <div class="plate-head">
+    <div class="wrap">
+      <span class="plate-no" data-pl="Plansza 02" data-en="Plate 02">Plansza 02</span>
+      <h1 data-pl-html="Jak daleko sięga <em>ręka</em>"
+          data-en-html="How far the <em>hand</em> reaches">
+        Jak daleko sięga <em>ręka</em>
+      </h1>
+      <p class="standfirst"
+         data-pl="Wachlarz zasięgu czterdziestu ośmiu modeli, rozpięty od punktu startu. Pierścienie rosną dziesięciokrotnie: dron zwiadowczy kończy się tam, gdzie skrzydłowy dalekiego zasięgu dopiero zaczyna."
+         data-en="A fan of reach for forty-eight models, opened from the launch point. The rings grow tenfold: a scout drone ends where a long-range strike wing only begins."></p>
+      <div class="hero-figs" id="figs"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <h3 data-pl="Wachlarz" data-en="The fan"></h3>
+      <h2 data-pl="Każdy promień to jeden model" data-en="Every spoke is one model"></h2>
+      <p class="prose" style="color:var(--muted);max-width:34rem"
+         data-pl="Modele rozłożone są w sektorach według klasy, od najkrótszego zasięgu po lewej do najdłuższego po prawej. Długość promienia to zasięg; pogrubiony odcinek pokazuje widełki, jeśli atlas je podaje."
+         data-en="Models are laid out in sectors by class, from the shortest reach on the left to the longest on the right. The length of a spoke is the range; the thicker segment shows the bracket where the atlas gives one."></p>
+
+      <div class="controls" id="controls"></div>
+
+      <div class="fan-wrap">
+        <div class="chart-frame"><svg class="chart" id="fan" role="img"></svg></div>
+        <aside class="fan-side">
+          <h4 data-pl="Pierścienie" data-en="Rings"></h4>
+          <dl id="rings"></dl>
+          <h4 data-pl="Domena" data-en="Domain"></h4>
+          <div class="legend" id="legend" style="flex-direction:column;gap:.5rem"></div>
+        </aside>
+      </div>
+      <div id="tablehost"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note"
+         data-pl-html="<b>Jak czytać.</b> Dla dronów rozpoznawczych atlas podaje osobno zasięg łączności i długość trasy — tutaj użyto pierwszej liczby z pola, czyli promienia sterowania. Pełny zapis źródłowy jest w podpowiedzi każdego promienia. Sześć modeli opisanych wyłącznie słownie („strefa OPL”, „kilka km”) nie ma promienia i nie zostało dopisanych na siłę."
+         data-en-html="<b>How to read this.</b> For reconnaissance drones the atlas lists the datalink range and the route length separately — the first figure in the field is used here, that is, the control radius. The full source wording sits in each spoke’s tooltip. Six models described only in words (“air-defence zone”, “a few km”) have no spoke and were not forced onto the scale."></p>
+      <div class="pager">
+        <a href="../koszt/" data-pl="← Plansza 01 · Ekonomia asymetrii" data-en="← Plate 01 · The economics of asymmetry"></a>
+        <a href="../masa-predkosc/" data-pl="Plansza 03 · Morfologia →" data-en="Plate 03 · Morphology →"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-foot__in"></div></footer>
+
+<script type="module">
+import { boot, lang, T, PAL, DOMAIN_COLOR, LEN, len, lenBoth, lenSpan, imperial,
+         logScale, el, clear, Tip, tipHTML, dataTable, nf } from '../atlas.js';
+
+let DATA = null;
+const state = { domain: 'all' };
+
+const withRange = () => DATA.drones.filter(d => d.range && (state.domain === 'all' || d.domain === state.domain));
+
+/* klasy uporządkowane medianą zasięgu — sektory rosną w prawo */
+function classOrder(rows) {
+  const byType = new Map();
+  for (const d of rows) {
+    if (!byType.has(d.typeId)) byType.set(d.typeId, []);
+    byType.get(d.typeId).push(d);
+  }
+  const med = arr => {
+    const v = arr.map(d => (d.range.lo + d.range.hi) / 2).sort((a, b) => a - b);
+    return v[Math.floor(v.length / 2)];
+  };
+  return [...byType.entries()]
+    .map(([id, list]) => ({ id, list: list.sort((a, b) => (a.range.lo + a.range.hi) / 2 - (b.range.lo + b.range.hi) / 2), med: med(list) }))
+    .sort((a, b) => a.med - b.med);
+}
+
+function figures() {
+  const rows = DATA.drones.filter(d => d.range);
+  const lo = rows.reduce((a, b) => (a.range.lo <= b.range.lo ? a : b));
+  const hi = rows.reduce((a, b) => (a.range.hi >= b.range.hi ? a : b));
+  document.getElementById('figs').innerHTML = [
+    [len(lo.range.lo), (lang === 'en' ? 'shortest — ' : 'najkrótszy — ') + T(lo.name)],
+    [len(hi.range.hi), (lang === 'en' ? 'longest — ' : 'najdłuższy — ') + T(hi.name)],
+    ['×' + nf(Math.round(hi.range.hi / lo.range.lo)), lang === 'en' ? 'between the two ends' : 'między skrajnymi'],
+    [rows.length + ' / 54', lang === 'en' ? 'models with a numeric range' : 'modeli z zasięgiem liczbowym'],
+  ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
+}
+
+function controls() {
+  const doms = [['all', { pl: 'Wszystkie', en: 'All' }], ...Object.entries(DATA.domains)];
+  const host = document.getElementById('controls');
+  host.innerHTML =
+    `<span class="controls__label">${lang === 'en' ? 'Domain' : 'Domena'}</span>` +
+    doms.map(([id, label]) =>
+      `<button class="chip" type="button" data-d="${id}" aria-pressed="${state.domain === id}">
+         ${id === 'all' ? '' : `<span class="chip__dot" style="background:${DOMAIN_COLOR[id]}"></span>`}${T(label)}
+       </button>`).join('');
+  host.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => {
+    state.domain = b.dataset.d; draw();
+  }));
+
+  document.getElementById('legend').innerHTML = Object.entries(DATA.domains).map(([id, l]) =>
+    `<span class="legend__i"><span class="legend__sw" style="background:${DOMAIN_COLOR[id]}"></span>${T(l)}</span>`).join('');
+}
+
+function fan() {
+  const rows = withRange();
+  const svg = document.getElementById('fan');
+  clear(svg);
+  if (!rows.length) return;
+
+  const W = 880, H = 560;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('aria-label', lang === 'en'
+    ? `Radial fan of the range of ${rows.length} drone models, rings at ten, one hundred and one thousand kilometres`
+    : `Promieniowy wachlarz zasięgu ${rows.length} modeli dronów, pierścienie co dziesięciokrotność`);
+
+  const cx = W / 2, cy = H - 54;
+  const r0 = 58, r1 = Math.min(cy - 30, W / 2 - 70);
+  const R = logScale(4, 3200, r0, r1);
+  const pt = (r, th) => [cx + r * Math.sin(th), cy - r * Math.cos(th)];
+
+  /* pierścienie dekadowe */
+  const rg = el('g', {}, svg);
+  /* pierścienie w jednostce czytelnika (km albo mi); promień liczymy z wartości
+     metrycznej, bo taka siedzi w danych. Czwarty pierścień pominięty — na skali
+     logarytmicznej leżałby tuż przy trzecim i podpisy by się zlały. */
+  const ringDisp = [10, 100, 1000];
+  for (const dv of ringDisp) {
+    const v = LEN.from(dv);
+    const r = R(v);
+    const [ax, ay] = pt(r, -Math.PI / 2), [bx, by] = pt(r, Math.PI / 2);
+    el('path', { d: `M ${ax} ${ay} A ${r} ${r} 0 0 1 ${bx} ${by}`, class: 'ring' }, rg);
+    /* podpis nad podstawą po lewej — w szczelinie, której nie zajmuje żaden sektor */
+    el('text', { x: cx - r, y: cy - 7, 'text-anchor': 'middle', class: 'ring-lbl', text: nf(dv) + ' ' + LEN.unit() }, rg);
+  }
+  /* podstawa */
+  el('line', { x1: cx - r1, x2: cx + r1, y1: cy, y2: cy, stroke: PAL.line }, rg);
+  el('circle', { cx, cy, r: 4, fill: PAL.brass }, rg);
+  el('text', { x: cx, y: cy + 20, 'text-anchor': 'middle', class: 'ring-lbl',
+    text: lang === 'en' ? 'launch point' : 'punkt startu' }, rg);
+
+  /* sektory klas, proporcjonalne do liczebności */
+  const groups = classOrder(rows);
+  const total = rows.length;
+  const A0 = -Math.PI / 2 * 0.94, A1 = Math.PI / 2 * 0.94;
+  const gap = 0.012;
+  let a = A0;
+
+  for (const g of groups) {
+    const wedge = (g.list.length / total) * (A1 - A0) - gap;
+    const type = DATA.types.find(t => t.id === g.id);
+
+    g.list.forEach((d, i) => {
+      const th = wedge <= 0 ? a : a + ((i + 0.5) / g.list.length) * wedge;
+      const c = DOMAIN_COLOR[d.domain];
+      const rLo = R(d.range.lo), rHi = R(d.range.hi);
+      const [x0, y0] = pt(r0, th);
+      const [xl, yl] = pt(rLo, th), [xh, yh] = pt(rHi, th);
+
+      const gg = el('g', { class: 'spoke' }, svg);
+      /* cienki trzon do dolnej wartości */
+      el('line', { x1: x0, y1: y0, x2: xl, y2: yl, stroke: c, 'stroke-width': 1, opacity: .35 }, gg);
+      /* pogrubione widełki lo–hi */
+      if (rHi - rLo > 1) el('line', { x1: xl, y1: yl, x2: xh, y2: yh, stroke: c, 'stroke-width': 4, 'stroke-linecap': 'round', opacity: .85 }, gg);
+      el('circle', { cx: xh, cy: yh, r: 3.4, fill: c, stroke: PAL.ink, 'stroke-width': 1.5 }, gg);
+
+      /* powierzchnia trafienia: szeroki, niewidoczny promień */
+      const [hx, hy] = pt(r1 + 14, th);
+      const hit = el('line', { x1: x0, y1: y0, x2: hx, y2: hy, stroke: 'transparent', 'stroke-width': 14 }, gg);
+      const show = ev => Tip.show(tipHTML({
+        title: T(d.name),
+        sub: [T(type?.short), T(d.origin)].filter(Boolean).join(' · '),
+        rows: [
+          [lang === 'en' ? 'Range' : 'Zasięg', lenSpan(d.range.lo, d.range.hi)],
+          [lang === 'en' ? 'Class' : 'Klasa', T(type?.name)],
+          [lang === 'en' ? 'In service' : 'W służbie', d.year],
+        ],
+        raw: d.range.raw,
+      }), ev);
+      hit.addEventListener('mouseenter', show);
+      hit.addEventListener('mousemove', ev => Tip.move(ev));
+      hit.addEventListener('mouseleave', () => Tip.hide());
+    });
+
+    /* etykieta sektora na obrzeżu */
+    if (g.list.length >= 2 && wedge > 0.07) {
+      const thm = a + wedge / 2;
+      const [lx, ly] = pt(r1 + 14, thm);
+      /* tekst biegnie wzdłuż promienia; na lewej połowie obracamy o 180°,
+         inaczej czytałby się do góry nogami */
+      let deg = (Math.atan2(-Math.cos(thm), Math.sin(thm)) * 180) / Math.PI;
+      let anchor = 'start';
+      if (deg > 90 || deg < -90) { deg += 180; anchor = 'end'; }
+      el('text', {
+        x: lx, y: ly, class: 'sector-lbl', 'text-anchor': anchor, dy: '0.32em',
+        transform: `rotate(${deg} ${lx} ${ly})`,
+        text: T(DATA.types.find(t => t.id === g.id)?.short),
+      }, svg);
+    }
+    a += wedge + gap;
+  }
+
+  /* opis pierścieni w panelu bocznym */
+  const panelDisp = [...ringDisp, imperial() ? 2000 : 3000];
+  document.getElementById('rings').innerHTML = panelDisp.map(dv => {
+    const v = LEN.from(dv);
+    const n = rows.filter(d => d.range.hi >= v).length;
+    return `<dt>${nf(dv)} ${LEN.unit()}</dt><dd>${n} ${lang === 'en' ? 'models reach at least this far' : (n === 1 ? 'model sięga co najmniej tyle' : 'modeli sięga co najmniej tyle')}</dd>`;
+  }).join('');
+}
+
+let made = false;
+function table() {
+  if (made) return; made = true;
+  dataTable(document.getElementById('tablehost'), {
+    caption: { pl: 'Zasięg — pełne dane planszy', en: 'Range — the full data of this plate' },
+    cols: () => ([
+      { label: 'Model' },
+      { label: lang === 'en' ? 'Class' : 'Klasa' },
+      { label: lang === 'en' ? 'Range' : 'Zasięg', num: true },
+      { label: lang === 'en' ? 'As written in the atlas' : 'Zapis w atlasie' },
+    ]),
+    rows: () => withRange()
+      .slice().sort((a, b) => (a.range.lo + a.range.hi) / 2 - (b.range.lo + b.range.hi) / 2)
+      .map(d => [
+        T(d.name),
+        T(DATA.types.find(t => t.id === d.typeId)?.short) || '—',
+        lenSpan(d.range.lo, d.range.hi),
+        d.range.raw,
+      ]),
+  });
+}
+
+function draw() { figures(); controls(); fan(); table(); }
+boot({ active: '/infografiki/', draw: d => { DATA = d ?? DATA; draw(); } });
+</script>
+</body>
+</html>
