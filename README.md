@@ -2,18 +2,17 @@
 
 Dwujęzyczny atlas OSINT głównych modeli bezzałogowców na froncie ukraińskim i innych teatrach (styczeń–wrzesień 2026). TTH, wymiary, zdjęcia, raport i PDF.
 
-**Adres:** [https://atlas.halaba.online](https://atlas.halaba.online)
-
-Bilingual OSINT atlas of representative UAV types — Ukraine front and other theaters, January–September 2026.
+**Live:** [https://atlas.halaba.online](https://atlas.halaba.online)  
+**GitHub Pages:** served from [`mhalaba.github.io`](https://github.com/mhalaba/mhalaba.github.io)
 
 ## DNS (Cloudflare)
 
-`atlas.halaba.online` already resolves through Cloudflare, but the origin has no vhost for this host (HTTP 403). Point the subdomain at GitHub Pages:
+Strona jest już opublikowana na GitHub Pages z CNAME `atlas.halaba.online`. Subdomena nadal leci na stary origin (403). W Cloudflare dodaj **konkretny** rekord (nadpisze wildcard):
 
 | Type | Name | Target | Proxy |
 | --- | --- | --- | --- |
-| CNAME | `atlas` | `mhalaba.github.io` | DNS only (grey cloud), or Proxied with SSL Full |
+| CNAME | `atlas` | `mhalaba.github.io` | DNS only (szara chmurka) |
 
-Wait a few minutes. GitHub issues HTTPS for the custom domain after the CNAME is live.
+Potem GitHub wystawi HTTPS. Jak przy [poradnik.punktodpornosci.pl](https://poradnik.punktodpornosci.pl/).
 
-Zdjęcia: źródła otwarte (Wikimedia i podobne). Treść atlasu: opracowanie na podstawie źródeł otwartych.
+Zdjęcia: źródła otwarte. Treść: opracowanie na podstawie źródeł otwartych.
