@@ -119,7 +119,7 @@ function figures() {
     [len(lo.range.lo), (lang === 'en' ? 'shortest — ' : 'najkrótszy — ') + T(lo.name)],
     [len(hi.range.hi), (lang === 'en' ? 'longest — ' : 'najdłuższy — ') + T(hi.name)],
     ['×' + nf(Math.round(hi.range.hi / lo.range.lo)), lang === 'en' ? 'between the two ends' : 'między skrajnymi'],
-    [rows.length + ' / 54', lang === 'en' ? 'models with a numeric range' : 'modeli z zasięgiem liczbowym'],
+    [rows.length + ' / ' + DATA.drones.length, lang === 'en' ? 'models with a numeric range' : 'modeli z zasięgiem liczbowym'],
   ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
 }
 

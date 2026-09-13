@@ -92,7 +92,7 @@ function figures() {
     [mass(light.mtow.lo), (lang === 'en' ? 'lightest — ' : 'najlżejszy — ') + T(light.name)],
     [mass(heavy.mtow.hi), (lang === 'en' ? 'heaviest — ' : 'najcięższy — ') + T(heavy.name)],
     [spd(fast.speed.hi), (lang === 'en' ? 'fastest — ' : 'najszybszy — ') + T(fast.name)],
-    [rows.length + ' / 54', lang === 'en' ? 'models with both figures' : 'modeli z obiema liczbami'],
+    [rows.length + ' / ' + DATA.drones.length, lang === 'en' ? 'models with both figures' : 'modeli z obiema liczbami'],
   ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
 }
 

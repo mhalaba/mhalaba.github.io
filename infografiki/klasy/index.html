@@ -129,7 +129,7 @@ function figures() {
   for (const t of all) doms[t.domain] = (doms[t.domain] || 0) + 1;
   document.getElementById('figs').innerHTML = [
     ['16', lang === 'en' ? 'classes in the taxonomy' : 'klas w taksonomii'],
-    ['54', lang === 'en' ? 'models sorted into them' : 'modeli w nich rozłożonych'],
+    [String(DATA.drones.length), lang === 'en' ? 'models sorted into them' : 'modeli w nich rozłożonych'],
     [String(biggest.n), (lang === 'en' ? 'largest class — ' : 'najliczniejsza klasa — ') + T(biggest.t.short)],
     [`${doms.air} · ${doms.sea} · ${doms.ground}`, lang === 'en' ? 'classes by air, sea, ground' : 'klas: powietrze, morze, ląd'],
   ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');

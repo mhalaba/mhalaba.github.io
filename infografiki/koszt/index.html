@@ -95,7 +95,7 @@ function figures() {
     [usd(lo.cost.lo), lang === 'en' ? `cheapest — ${T(lo.name)}` : `najtańszy — ${T(lo.name)}`],
     [usd(hi.cost.hi), lang === 'en' ? `dearest — ${T(hi.name)}` : `najdroższy — ${T(hi.name)}`],
     ['1 : ' + nf(ratio), lang === 'en' ? 'the span between them' : 'rozpiętość między nimi'],
-    [String(unit.length) + ' / 54', lang === 'en' ? 'models with a published unit price' : 'modeli z jawną ceną jednostkową'],
+    [String(unit.length) + ' / ' + DATA.drones.length, lang === 'en' ? 'models with a published unit price' : 'modeli z jawną ceną jednostkową'],
   ].map(([n, l]) => `<div class="fig"><span class="fig__n">${n}</span><span class="fig__l">${l}</span></div>`).join('');
 }
 

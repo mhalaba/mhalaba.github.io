@@ -34,6 +34,14 @@ pokrewnego modelu — to nadal błąd, tylko w obrębie jednego kraju i zbliżon
 | AQ-400 Scythe | `fp1.jpg` (FP-1) | inny producent |
 | WIY Spys | `strila.jpg` (WIY Striła) | ten sam producent, model siostrzany |
 
+## Zaślepka zamiast zdjęcia
+
+Geran-5 (`drones/geran5.svg`) nie ma zdjęcia — na Wikimedia Commons nie ma
+żadnego wizerunku tej konstrukcji na wolnej licencji. Zamiast podstawiać
+zdjęcie irańskiego Karrara, na którym Geran-5 jest wzorowany, albo Gerana-4,
+karta dostała rysunek poglądowy klasy z wyraźnym podpisem, że nie jest to
+wizerunek egzemplarza. Do podmiany, gdy pojawi się zdjęcie z licencją.
+
 ## Pozostałe zdjęcia
 
 Reszta katalogu pochodzi ze źródeł otwartych zebranych przy budowie atlasu;
