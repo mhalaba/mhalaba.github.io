@@ -47,6 +47,12 @@ Gerbera-2 (`drones/gerbera2.svg`) — to samo. Wersja z sierpnia 2026 r. nie ma
 zdjęcia na wolnej licencji, a zdjęcia zwykłej Gerbery pokazują mniejszy,
 inaczej wyglądający płatowiec, więc byłyby mylące.
 
+S8000 Banderol (`drones/banderol.svg`), Sargan-3000 (`drones/sargan3000.svg`)
+i BM-70 (`drones/bm70.svg`) — tak samo: żadna z tych konstrukcji nie ma
+zdjęcia na wolnej licencji na Wikimedia Commons. Każda dostała rysunek
+poglądowy właściwej klasy: pocisk manewrujący, jednostka nawodna,
+skrzydło latające.
+
 ## Pozostałe zdjęcia
 
 Reszta katalogu pochodzi ze źródeł otwartych zebranych przy budowie atlasu;

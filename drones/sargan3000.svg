@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img"
+     aria-label="Brak zdjęcia: Sargan-3000 / No openly licensed photograph of the Sargan-3000">
+  <defs>
+    <pattern id="siatka" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#c4a35a" stroke-opacity=".08" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="750" fill="#1c2621"/>
+  <rect width="1200" height="750" fill="url(#siatka)"/>
+
+  <!-- sylwetka poglądowa klasy, nie wizerunek egzemplarza -->
+  <g fill="none" stroke="#8a7340" stroke-width="2" stroke-opacity=".55" stroke-linejoin="round">
+    <path d="M330 400 h500 l60 -22 -40 -30 h-520 z"/>
+    <path d="M430 348 h150 l-14 -34 h-120 z"/>
+    <path d="M500 314 v-26 h34 v26"/>
+    <path d="M300 418 q60 14 120 0 t120 0 t120 0 t120 0 t120 0"/>
+    <path d="M300 440 q60 14 120 0 t120 0 t120 0 t120 0 t120 0"/>
+  </g>
+
+  <line x1="330" y1="536" x2="870" y2="536" stroke="#2a332e" stroke-width="1"/>
+
+  <text x="600" y="500" text-anchor="middle"
+        font-family="'IBM Plex Serif', Georgia, serif" font-size="46" font-weight="600" fill="#f1e6d0">Sargan-3000</text>
+
+  <text x="600" y="576" text-anchor="middle"
+        font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="18"
+        letter-spacing="4" fill="#c4a35a">BRAK ZDJĘCIA NA WOLNEJ LICENCJI</text>
+  <text x="600" y="606" text-anchor="middle"
+        font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="16"
+        letter-spacing="3" fill="#9aa396">NO OPENLY LICENSED PHOTOGRAPH</text>
+
+  <text x="600" y="652" text-anchor="middle"
+        font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="16" fill="#9aa396">
+    Rysunek poglądowy klasy, nie wizerunek egzemplarza
+  </text>
+  <text x="600" y="676" text-anchor="middle"
+        font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="16" font-style="italic" fill="#9aa396">
+    A class sketch, not a likeness of the aircraft
+  </text>
+</svg>
