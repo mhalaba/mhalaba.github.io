@@ -18,9 +18,24 @@ do 1200 px szerokości.
 | Sting (Wild Hornets) | `drones/sting.jpg` | CC BY 4.0 | Sztab Generalny Sił Zbrojnych Ukrainy |
 | Hero-120 | `drones/hero120.jpg` | CC BY-SA 4.0 | Wikimedia Commons, użytkownik MilleniumAC |
 | Geran-4 | `drones/geran4.jpg` | CC0 | Wikimedia Commons, autor nieznany |
+| Kub-BLA | `drones/kub.jpg` | CC BY-SA 4.0 | Wikimedia Commons, użytkownik Mztourist (KUB-E, IDEX 2023) |
+| Lucky Strike | `drones/luckystrike.jpg` | CC BY-SA 4.0 | Wikimedia Commons, użytkownik Zenwort |
+| Jołka | `drones/yolka.jpg` | CC BY 4.0 | Wikimedia Commons, użytkownik F.Alexsandr |
 
 Zdjęcie Hero-120 przedstawia stoisko UVision z trzema pociskami krążącymi;
 Hero-120 stoi pośrodku, opisany tabliczką, obok Hero-30 i Hero-400EC.
+
+## Poprawione we wrześniu 2026
+
+Audyt porównujący nazwę pliku z modelem wykrył dwa błędy, których wcześniejsza
+kontrola nie mogła znaleźć, bo szukała wyłącznie plików użytych przez więcej niż
+jeden wpis: **Kub-BLA** nosił zdjęcie Lanceta, a **Lucky Strike-2** — zdjęcie
+Vampire'a, czyli konstrukcji innego producenta. Oba dostały własne zdjęcia.
+
+Zdjęcie Lucky Strike pochodzi z ekspozycji i nie ma na tabliczce numeru wersji;
+podane tam wartości (2 kg, 100 km/h, 5–10 km) różnią się nieco od danych atlasu
+dla poszczególnych wariantów, więc przypisanie do Lucky Strike-2 jest
+najlepszym dopasowaniem, a nie pewnością.
 
 ## Wciąż współdzielone
 
@@ -51,7 +66,8 @@ S8000 Banderol (`drones/banderol.svg`), Sargan-3000 (`drones/sargan3000.svg`)
 i BM-70 (`drones/bm70.svg`) — tak samo: żadna z tych konstrukcji nie ma
 zdjęcia na wolnej licencji na Wikimedia Commons. Każda dostała rysunek
 poglądowy właściwej klasy: pocisk manewrujący, jednostka nawodna,
-skrzydło latające.
+skrzydło latające. Tak samo Dowbusz T40 (`drones/dovbusht40.svg`) i Berdysz
+(`drones/berdysh.svg`) — układ dwubelkowy i sześciowirnikowiec.
 
 ## Pozostałe zdjęcia
 
