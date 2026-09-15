@@ -23,8 +23,8 @@
         Katalog, który daje się <em>zmierzyć</em>
       </h1>
       <p class="standfirst"
-         data-pl="Pięćdziesiąt pięć modeli atlasu opisanych jest słowami. Te plansze wyciągają z tych opisów liczby — koszt, zasięg, masę, prędkość, pochodzenie — i pokazują, co z nich wynika, gdy zestawić je obok siebie."
-         data-en="The atlas describes its fifty-five models in words. These plates pull the numbers out of those descriptions — cost, reach, mass, speed, origin — and show what follows once they are set side by side."></p>
+         data-pl="Pięćdziesiąt siedem modeli atlasu opisanych jest słowami. Te plansze wyciągają z tych opisów liczby — koszt, zasięg, masę, prędkość, pochodzenie — i pokazują, co z nich wynika, gdy zestawić je obok siebie."
+         data-en="The atlas describes its fifty-seven models in words. These plates pull the numbers out of those descriptions — cost, reach, mass, speed, origin — and show what follows once they are set side by side."></p>
       <div class="hero-figs" id="figs"></div>
     </div>
   </div>
@@ -142,7 +142,7 @@ function spark(slug) {
 function figures() {
   const c = k => DATA.drones.filter(d => d[k]).length;
   document.getElementById('figs').innerHTML = [
-    ['54', lang === 'en' ? 'models in the catalogue' : 'modeli w katalogu'],
+    [String(DATA.drones.length), lang === 'en' ? 'models in the catalogue' : 'modeli w katalogu'],
     [String(c('range')), lang === 'en' ? 'with a numeric range' : 'z zasięgiem liczbowym'],
     [String(c('mtow')), lang === 'en' ? 'with a take-off mass' : 'z masą startową'],
     [String(DATA.drones.filter(d => d.cost && !d.cost.system).length), lang === 'en' ? 'with a unit price' : 'z ceną jednostkową'],

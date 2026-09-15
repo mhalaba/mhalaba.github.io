@@ -30,7 +30,7 @@ Gdzie atlas podaje wyłącznie opis słowny (`strefa OPL`, `kilka kilometrów`,
 Nic nie jest szacowane ani dopisywane spoza katalogu. Oryginalny zapis jest
 widoczny w podpowiedzi każdego znacznika i w tabeli danych pod każdym wykresem.
 
-Pokrycie: zasięg 49/55, prędkość 50/55, masa 41/55, cena jednostkowa 19/55.
+Pokrycie: zasięg 50/57, prędkość 51/57, masa 42/57, cena jednostkowa 19/57.
 
 ### Jednostki
 

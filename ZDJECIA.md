@@ -17,6 +17,7 @@ do 1200 px szerokości.
 | Merops | `drones/merops.jpg` | domena publiczna | Sgt. Luis Garcia, 10th Army Air and Missile Defense Command, U.S. Army |
 | Sting (Wild Hornets) | `drones/sting.jpg` | CC BY 4.0 | Sztab Generalny Sił Zbrojnych Ukrainy |
 | Hero-120 | `drones/hero120.jpg` | CC BY-SA 4.0 | Wikimedia Commons, użytkownik MilleniumAC |
+| Geran-4 | `drones/geran4.jpg` | CC0 | Wikimedia Commons, autor nieznany |
 
 Zdjęcie Hero-120 przedstawia stoisko UVision z trzema pociskami krążącymi;
 Hero-120 stoi pośrodku, opisany tabliczką, obok Hero-30 i Hero-400EC.
@@ -41,6 +42,10 @@ Geran-5 (`drones/geran5.svg`) nie ma zdjęcia — na Wikimedia Commons nie ma
 zdjęcie irańskiego Karrara, na którym Geran-5 jest wzorowany, albo Gerana-4,
 karta dostała rysunek poglądowy klasy z wyraźnym podpisem, że nie jest to
 wizerunek egzemplarza. Do podmiany, gdy pojawi się zdjęcie z licencją.
+
+Gerbera-2 (`drones/gerbera2.svg`) — to samo. Wersja z sierpnia 2026 r. nie ma
+zdjęcia na wolnej licencji, a zdjęcia zwykłej Gerbery pokazują mniejszy,
+inaczej wyglądający płatowiec, więc byłyby mylące.
 
 ## Pozostałe zdjęcia
 
