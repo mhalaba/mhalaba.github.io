@@ -74,4 +74,10 @@
   <url><loc>https://atlas.halaba.online/dron/hero120</loc></url>
   <url><loc>https://atlas.halaba.online/dron/merops</loc></url>
   <url><loc>https://atlas.halaba.online/dron/aq400</loc></url>
+  <url>
+    <loc>https://atlas.halaba.online/alarm-powietrzny/</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
